@@ -1,4 +1,4 @@
-import { LoginDTO, RegisterDTO, AuthResponse } from '@/types/auth.types';
+import { LoginDTO, RegisterDTO, AuthResponse, User } from '@/types/auth.types';
 import { http } from '@/lib/http';
 
 // Servicios para autenticación de usuarios
@@ -40,9 +40,9 @@ export const login = async (credentials: LoginDTO): Promise<AuthResponse> => {
  * @param userData Datos del usuario a registrar
  * @returns Respuesta con usuario creado
  */
-export const register = async (userData: RegisterDTO): Promise<{ user: unknown }> => {
+export const register = async (userData: RegisterDTO): Promise<User> => {
   try {
-    const { data, error } = await http.post<{ user: unknown }>('/auth/register', userData);
+    const { data, error } = await http.post<User>('/auth/register', userData);
 
     if (error) {
       throw new Error(error);
@@ -94,7 +94,7 @@ export const logout = async (): Promise<{ message: string }> => {
  * Verifica el token actual del usuario
  * @returns Datos del usuario si el token es válido
  */
-export const verifyToken = async (): Promise<{ user: unknown }> => {
+export const verifyToken = async (): Promise<{ user: User }> => {
   try {
     const token = localStorage.getItem('token');
 
@@ -102,7 +102,7 @@ export const verifyToken = async (): Promise<{ user: unknown }> => {
       throw new Error('No hay token disponible');
     }
 
-    const { data, error } = await http.get<{ user: unknown }>('/auth/verify', {
+    const { data, error } = await http.get<{ user: User }>('/auth/verify', {
       withAuth: true
     });
 
