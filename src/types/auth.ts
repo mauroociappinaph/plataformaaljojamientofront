@@ -16,9 +16,7 @@ export interface LoginDTO {
 export interface RegisterDTO {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
+  name: string;
 }
 
 /**
@@ -27,11 +25,10 @@ export interface RegisterDTO {
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   role: UserRole;
-  profilePicture?: string;
-  phoneNumber?: string;
+  avatar?: string;
+  phone?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,9 +46,8 @@ export enum UserRole {
  * Respuesta del servidor para autenticación
  */
 export interface AuthResponse {
-  user: User;
-  token: string;
-  expiresIn?: number;
+  access_token: string;
+  user?: User;
 }
 
 /**

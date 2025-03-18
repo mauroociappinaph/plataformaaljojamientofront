@@ -1,11 +1,7 @@
-import { LoginDTO, RegisterDTO, AuthResponse, User } from '@/types/auth';
+import { LoginDTO, RegisterDTO, AuthResponse } from '@/types/auth';
+import { http } from '@/lib/http';
 
-// URL base de la API
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
-/**
- * Servicios para autenticación de usuarios
- */
+// Servicios para autenticación de usuarios
 
 /**
  * Inicia sesión de usuario
@@ -14,51 +10,55 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
  */
 export const login = async (credentials: LoginDTO): Promise<AuthResponse> => {
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-      credentials: 'include', // Para soportar cookies si se usan
-    });
+    const { data, error } = await http.post<AuthResponse>('/auth/login', credentials);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Error al iniciar sesión');
+    if (error) {
+      throw new Error(error);
     }
 
-    return await response.json();
+    if (!data) {
+      throw new Error('No se recibieron datos del servidor');
+    }
+
+    // Guardar token en localStorage
+    if (data.access_token) {
+      localStorage.setItem('token', data.access_token);
+    }
+
+    return data;
   } catch (error) {
-    console.error('Error en servicio de login:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('Error en servicio de login:', error.message);
+      throw error;
+    }
+    throw new Error('Error desconocido en el inicio de sesión');
   }
 };
 
 /**
  * Registra un nuevo usuario
  * @param userData Datos del usuario a registrar
- * @returns Respuesta con token y datos del usuario creado
+ * @returns Respuesta con usuario creado
  */
-export const register = async (userData: RegisterDTO): Promise<AuthResponse> => {
+export const register = async (userData: RegisterDTO): Promise<{ user: unknown }> => {
   try {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
+    const { data, error } = await http.post<{ user: unknown }>('/auth/register', userData);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Error al registrar usuario');
+    if (error) {
+      throw new Error(error);
     }
 
-    return await response.json();
+    if (!data) {
+      throw new Error('No se recibieron datos del servidor');
+    }
+
+    return data;
   } catch (error) {
-    console.error('Error en servicio de registro:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('Error en servicio de registro:', error.message);
+      throw error;
+    }
+    throw new Error('Error desconocido en el registro');
   }
 };
 
@@ -68,20 +68,25 @@ export const register = async (userData: RegisterDTO): Promise<AuthResponse> => 
  */
 export const logout = async (): Promise<{ message: string }> => {
   try {
-    // Si la gestión de sesión es con cookies en el servidor
-    const response = await fetch(`${API_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    });
+    // Limpiar token del localStorage
+    localStorage.removeItem('token');
 
-    if (!response.ok) {
-      throw new Error('Error al cerrar sesión');
+    // Si la gestión de sesión es con cookies en el servidor
+    const { data, error } = await http.post<{ message: string }>('/auth/logout');
+
+    if (error) {
+      throw new Error(error);
     }
 
-    return { message: 'Sesión cerrada correctamente' };
+    return data || { message: 'Sesión cerrada correctamente' };
   } catch (error) {
-    console.error('Error en servicio de logout:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('Error en servicio de logout:', error.message);
+    }
+
+    // Incluso si hay un error en el servidor, consideramos el logout como exitoso
+    // ya que eliminamos el token del cliente
+    return { message: 'Sesión cerrada localmente' };
   }
 };
 
@@ -89,7 +94,7 @@ export const logout = async (): Promise<{ message: string }> => {
  * Verifica el token actual del usuario
  * @returns Datos del usuario si el token es válido
  */
-export const verifyToken = async (): Promise<{ user: User }> => {
+export const verifyToken = async (): Promise<{ user: unknown }> => {
   try {
     const token = localStorage.getItem('token');
 
@@ -97,20 +102,24 @@ export const verifyToken = async (): Promise<{ user: User }> => {
       throw new Error('No hay token disponible');
     }
 
-    const response = await fetch(`${API_URL}/auth/verify`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include',
+    const { data, error } = await http.get<{ user: unknown }>('/auth/verify', {
+      withAuth: true
     });
 
-    if (!response.ok) {
-      throw new Error('Token inválido o expirado');
+    if (error) {
+      throw new Error(error);
     }
 
-    return await response.json();
+    if (!data) {
+      throw new Error('No se recibieron datos del servidor');
+    }
+
+    return data;
   } catch (error) {
-    console.error('Error al verificar token:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('Error al verificar token:', error.message);
+      throw error;
+    }
+    throw new Error('Error desconocido al verificar la sesión');
   }
 };
