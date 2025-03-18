@@ -1,4 +1,4 @@
-import { LoginDTO, RegisterDTO, AuthResponse } from '@/types/auth';
+import { LoginDTO, RegisterDTO, AuthResponse } from '@/types/auth.types';
 import { http } from '@/lib/http';
 
 // Servicios para autenticación de usuarios

@@ -1,4 +1,4 @@
-import { HttpClient, RequestOptions, ApiResponse, HttpMethod } from '@/types/http';
+import { HttpClient, RequestOptions, ApiResponse, HttpMethod } from '@/types/http.types';
 
 // URL base de la API
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
