@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import Button from "../ui/button";
 
 export function HeroSection() {
   return (
@@ -13,10 +13,10 @@ export function HeroSection() {
             Explora alojamientos únicos en todo el mundo, desde apartamentos modernos hasta casas de campo tradicionales.
           </p>
           <div className="mt-8 flex gap-4">
-            <Button size="lg">
-              Explorar alojamientos
+            <Button>
+                Explorar alojamientos
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="secondary">
               Publicar alojamiento
             </Button>
           </div>

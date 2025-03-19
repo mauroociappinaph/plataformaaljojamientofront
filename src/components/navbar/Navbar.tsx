@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Search, Menu } from "lucide-react";
+import Button from "../ui/button";
 
 export function Navbar() {
   return (
@@ -27,13 +27,13 @@ export function Navbar() {
 
         {/* Navigation Items */}
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" className="hidden lg:flex">
+          <Button variant="ghost" className="hidden lg:flex">
             Publicar alojamiento
           </Button>
-          <Button variant="ghost" size="icon" className="lg:hidden">
+          <Button variant="ghost" className="lg:hidden">
             <Menu className="h-5 w-5" />
           </Button>
-          <Button variant="default" size="sm">
+          <Button variant="primary">
             Iniciar sesión
           </Button>
         </div>
