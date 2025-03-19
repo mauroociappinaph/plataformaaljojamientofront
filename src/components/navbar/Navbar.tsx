@@ -33,9 +33,16 @@ export function Navbar() {
           <Button variant="ghost" className="lg:hidden">
             <Menu className="h-5 w-5" />
           </Button>
-          <Button variant="primary">
-            Iniciar sesión
-          </Button>
+          <Link href="/login">
+            <Button variant="ghost">
+              Iniciar sesión
+            </Button>
+          </Link>
+          <Link href="/register">
+            <Button variant="primary">
+              Registrarse
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
