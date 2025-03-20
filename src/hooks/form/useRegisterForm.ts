@@ -70,6 +70,19 @@ export function useRegisterForm() {
   // Estado para la fortaleza de la contraseña
   const [passwordStrength, setPasswordStrength] = useState<number>(0);
 
+  // Estados para mostrar/ocultar contraseñas
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Funciones para alternar visibilidad de contraseñas
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(prev => !prev);
+  };
+
   // Actualizar la fortaleza de la contraseña cuando cambie
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(formData.password));
@@ -156,5 +169,9 @@ export function useRegisterForm() {
     handleChange,
     handleSubmit,
     passwordStrength,
+    showPassword,
+    showConfirmPassword,
+    togglePasswordVisibility,
+    toggleConfirmPasswordVisibility
   };
 }

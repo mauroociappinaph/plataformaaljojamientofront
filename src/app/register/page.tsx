@@ -5,7 +5,7 @@ import FormInput from '@/components/ui/FormInput';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import Button from '@/components/ui/button';
 import { useRegisterForm } from '@/hooks/form/useRegisterForm';
-import { UserIcon, EnvelopeIcon, LockClosedIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { UserIcon, EnvelopeIcon, LockClosedIcon, CheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import PasswordStrengthIndicator from '@/components/ui/PasswordStrengthIndicator';
 
 /**
@@ -20,6 +20,10 @@ export default function RegisterPage() {
     handleChange,
     handleSubmit,
     passwordStrength,
+    showPassword,
+    togglePasswordVisibility,
+    showConfirmPassword,
+    toggleConfirmPasswordVisibility,
   } = useRegisterForm();
 
   return (
@@ -34,7 +38,7 @@ export default function RegisterPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             O{' '}
-            <Link href="/login" className="font-medium text-vacacional-menta hover:text-vacacional-agua transition-colors duration-200">
+            <Link href="/login" className="font-medium text-vacacional-texto hover:text-vacacional-salvia transition-colors duration-200">
               inicia sesión con tu cuenta existente
             </Link>
           </p>
@@ -68,11 +72,11 @@ export default function RegisterPage() {
             floatingLabel
           />
 
-          <div className="mb-2">
+          <div className="mb-2 relative">
             <FormInput
               label="Contraseña"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               required
               placeholder="********"
@@ -80,27 +84,48 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={validationErrors.password}
               icon={<LockClosedIcon className="h-5 w-5 text-vacacional-salvia" />}
-              helperText="Usa al menos 8 caracteres con letras, números y símbolos"
               floatingLabel
             />
+            <button
+              type="button"
+              className="absolute right-3 top-3 z-10 text-gray-500 hover:text-vacacional-salvia transition-colors"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ?
+                <EyeSlashIcon className="h-5 w-5" /> :
+                <EyeIcon className="h-5 w-5" />
+              }
+            </button>
             {formData.password && (
               <PasswordStrengthIndicator strength={passwordStrength} />
             )}
           </div>
 
-          <FormInput
-            label="Confirmar Contraseña"
-            name="confirmPassword"
-            type="password"
-            autoComplete="new-password"
-            required
-            placeholder="********"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            error={validationErrors.confirmPassword}
-            icon={<CheckIcon className="h-5 w-5 text-vacacional-salvia" />}
-            floatingLabel
-          />
+          <div className="relative">
+            <FormInput
+              label="Confirmar Contraseña"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              autoComplete="new-password"
+              required
+              placeholder="********"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              error={validationErrors.confirmPassword}
+              icon={<CheckIcon className="h-5 w-5 text-vacacional-salvia" />}
+              floatingLabel
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-3 z-10 text-gray-500 hover:text-vacacional-salvia transition-colors"
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {showConfirmPassword ?
+                <EyeSlashIcon className="h-5 w-5" /> :
+                <EyeIcon className="h-5 w-5" />
+              }
+            </button>
+          </div>
 
           {error && <ErrorMessage message={error} />}
 

@@ -31,6 +31,14 @@ export function useLoginForm() {
   // Estado para errores de validación
   const [validationErrors, setValidationErrors] = useState<LoginFormErrors>({});
 
+  // Estado para mostrar/ocultar contraseña
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Función para alternar visibilidad de contraseña
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
+
   /**
    * Maneja los cambios en los inputs del formulario
    */
@@ -110,5 +118,7 @@ export function useLoginForm() {
     error,
     handleChange,
     handleSubmit,
+    showPassword,
+    togglePasswordVisibility
   };
 }
