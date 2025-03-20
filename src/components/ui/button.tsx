@@ -1,12 +1,6 @@
 'use client';
 
-import { ButtonHTMLAttributes } from 'react';
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isLoading?: boolean;
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
-  fullWidth?: boolean;
-}
+import { ButtonProps } from '@/types/ui.types';
 
 /**
  * Componente reutilizable para botones

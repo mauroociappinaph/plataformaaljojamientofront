@@ -1,8 +1,6 @@
 'use client';
 
-interface ErrorMessageProps {
-  message: string | null;
-}
+import { ErrorMessageProps } from '@/types/ui.types';
 
 /**
  * Componente para mostrar errores del backend

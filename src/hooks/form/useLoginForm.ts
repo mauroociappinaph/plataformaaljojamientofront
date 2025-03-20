@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
+import { LoginFormData, LoginFormErrors } from '@/types/forms.types';
 
 // Definición del esquema de validación con Yup
 const loginSchema = yup.object().shape({
@@ -13,17 +14,6 @@ const loginSchema = yup.object().shape({
     .string()
     .required('La contraseña es obligatoria'),
 });
-
-// Tipo para los datos del formulario
-export interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-// Tipo para errores de validación
-export type LoginFormErrors = Partial<
-  Record<keyof LoginFormData, string>
->;
 
 /**
  * Hook personalizado para manejar el formulario de inicio de sesión

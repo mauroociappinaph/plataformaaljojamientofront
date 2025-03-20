@@ -1,10 +1,7 @@
 'use client';
 
 import React from 'react';
-
-interface PasswordStrengthIndicatorProps {
-  strength: number;
-}
+import { PasswordStrengthIndicatorProps } from '@/types/ui.types';
 
 /**
  * Componente para mostrar la fortaleza de la contraseña

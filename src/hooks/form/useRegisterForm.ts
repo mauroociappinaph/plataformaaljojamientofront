@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
+import { RegisterFormData, RegisterFormErrors } from '@/types/forms.types';
 
 // Definición del esquema de validación con Yup
 const registerSchema = yup.object().shape({
@@ -19,19 +20,6 @@ const registerSchema = yup.object().shape({
     .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
     .required('Confirma tu contraseña'),
 });
-
-// Tipo para los datos del formulario
-export interface RegisterFormData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-// Tipo para errores de validación
-export type RegisterFormErrors = Partial<
-  Record<keyof RegisterFormData, string>
->;
 
 /**
  * Calcula la fortaleza de una contraseña del 0-4
