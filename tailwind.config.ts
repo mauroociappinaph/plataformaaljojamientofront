@@ -18,6 +18,13 @@ const config: Config = {
     },
     extend: {
       colors: {
+        vacacional: {
+          'menta': '#A8E6CF',
+          'salvia': '#B5D99C',
+          'crema': '#F8F9D7',
+          'agua': '#C0E8D5',
+          'gris-verde': '#E2EFCB',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
@@ -34,6 +34,34 @@ export type RegisterFormErrors = Partial<
 >;
 
 /**
+ * Calcula la fortaleza de una contraseña del 0-4
+ * 0: Sin contraseña o muy débil
+ * 1: Débil (solo letras o solo números)
+ * 2: Moderada (letras y números)
+ * 3: Buena (letras, números y al menos 8 caracteres)
+ * 4: Fuerte (letras, números, caracteres especiales y al menos 8 caracteres)
+ */
+function calculatePasswordStrength(password: string): number {
+  if (!password) return 0;
+
+  let strength = 0;
+
+  // Si tiene al menos un carácter
+  if (password.length > 0) strength = 1;
+
+  // Si tiene letras y números
+  if (/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) strength = 2;
+
+  // Si tiene al menos 8 caracteres y tiene letras y números
+  if (password.length >= 8 && strength === 2) strength = 3;
+
+  // Si tiene caracteres especiales y al menos 8 caracteres
+  if (/[^a-zA-Z0-9]/.test(password) && password.length >= 8) strength = 4;
+
+  return strength;
+}
+
+/**
  * Hook personalizado para manejar el formulario de registro
  */
 export function useRegisterForm() {
@@ -50,6 +78,14 @@ export function useRegisterForm() {
 
   // Estado para errores de validación
   const [validationErrors, setValidationErrors] = useState<RegisterFormErrors>({});
+
+  // Estado para la fortaleza de la contraseña
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+  // Actualizar la fortaleza de la contraseña cuando cambie
+  useEffect(() => {
+    setPasswordStrength(calculatePasswordStrength(formData.password));
+  }, [formData.password]);
 
   /**
    * Maneja los cambios en los inputs del formulario
@@ -131,5 +167,6 @@ export function useRegisterForm() {
     error,
     handleChange,
     handleSubmit,
+    passwordStrength,
   };
 }
