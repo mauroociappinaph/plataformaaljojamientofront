@@ -1,15 +1,7 @@
 'use client';
 
-import React, { InputHTMLAttributes, ReactNode, useState } from 'react';
-
-interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  name: string;
-  error?: string;
-  icon?: ReactNode;
-  floatingLabel?: boolean;
-  helperText?: string;
-}
+import React, { useState } from 'react';
+import { FormInputProps } from '@/types/ui.types';
 
 /**
  * Componente reutilizable para inputs de formulario

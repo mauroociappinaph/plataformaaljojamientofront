@@ -19,11 +19,12 @@ const config: Config = {
     extend: {
       colors: {
         vacacional: {
-          'menta': '#A8E6CF',
-          'salvia': '#B5D99C',
+          'menta': '#8DD3B6',
+          'salvia': '#96BC7C',
           'crema': '#F8F9D7',
-          'agua': '#C0E8D5',
-          'gris-verde': '#E2EFCB',
+          'agua': '#A3D9C9',
+          'gris-verde': '#D6E5B3',
+          'texto': '#4C7A53',
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

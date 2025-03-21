@@ -5,7 +5,7 @@ import FormInput from '@/components/ui/FormInput';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import Button from '@/components/ui/button';
 import { useLoginForm } from '@/hooks/form/useLoginForm';
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 /**
  * Página de login con la paleta de colores vacacional
@@ -18,6 +18,8 @@ export default function LoginPage() {
     error,
     handleChange,
     handleSubmit,
+    showPassword,
+    togglePasswordVisibility
   } = useLoginForm();
 
   return (
@@ -45,7 +47,7 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             O{' '}
-            <Link href="/register" className="font-medium text-vacacional-menta hover:text-vacacional-agua transition-colors duration-200">
+            <Link href="/register" className="font-medium text-vacacional-salvia hover:text-vacacional-menta transition-colors duration-200">
               crea una cuenta nueva
             </Link>
           </p>
@@ -66,19 +68,31 @@ export default function LoginPage() {
             floatingLabel
           />
 
-          <FormInput
-            label="Contraseña"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            placeholder="********"
-            value={formData.password}
-            onChange={handleChange}
-            error={validationErrors.password}
-            icon={<LockClosedIcon className="h-5 w-5 text-vacacional-salvia" />}
-            floatingLabel
-          />
+          <div className="relative">
+            <FormInput
+              label="Contraseña"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              required
+              placeholder="********"
+              value={formData.password}
+              onChange={handleChange}
+              error={validationErrors.password}
+              icon={<LockClosedIcon className="h-5 w-5 text-vacacional-salvia" />}
+              floatingLabel
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-3 z-10 text-gray-500 hover:text-vacacional-salvia transition-colors"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ?
+                <EyeSlashIcon className="h-5 w-5" /> :
+                <EyeIcon className="h-5 w-5" />
+              }
+            </button>
+          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -94,7 +108,7 @@ export default function LoginPage() {
             </div>
 
             <div className="text-sm">
-              <Link href="/forgot-password" className="font-medium text-vacacional-menta hover:text-vacacional-agua transition-colors duration-200">
+              <Link href="/forgot-password" className="font-medium text-vacacional-salvia hover:text-vacacional-menta transition-colors duration-200">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
@@ -109,7 +123,7 @@ export default function LoginPage() {
               disabled={isLoading}
               fullWidth
               variant="primary"
-              className="group relative py-3 transform hover:scale-[1.01] transition-all bg-vacacional-menta hover:bg-vacacional-agua text-white"
+              className="group relative py-3 transform hover:scale-[1.01] transition-all font-medium"
             >
               {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </Button>
