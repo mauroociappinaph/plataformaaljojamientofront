@@ -14,9 +14,9 @@ export default function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  // Mapeo de variantes a clases de Tailwind usando la nueva paleta
+  // Mapeo de variantes a clases de Tailwind usando la nueva paleta con colores más sólidos
   const variantClasses = {
-    primary: 'bg-vacacional-menta hover:bg-vacacional-agua text-white',
+    primary: 'bg-vacacional-salvia hover:bg-vacacional-menta text-white shadow-md',
     secondary: 'bg-vacacional-gris-verde hover:bg-vacacional-salvia text-gray-800',
     danger: 'bg-red-600 hover:bg-red-700 text-white',
     ghost: 'bg-transparent hover:bg-vacacional-crema text-gray-700',
@@ -28,7 +28,7 @@ export default function Button({
     <button
       type="button"
       disabled={isLoading || disabled}
-      className={`relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vacacional-menta ${widthClass} ${
+      className={`relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vacacional-salvia ${widthClass} ${
         variantClasses[variant]
       } ${
         isLoading || disabled ? 'opacity-70 cursor-not-allowed' : ''

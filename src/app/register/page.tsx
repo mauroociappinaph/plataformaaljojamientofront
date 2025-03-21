@@ -97,7 +97,7 @@ export default function RegisterPage() {
               }
             </button>
             {formData.password && (
-              <PasswordStrengthIndicator strength={passwordStrength} />
+              <PasswordStrengthIndicator strength={passwordStrength} password={formData.password} />
             )}
           </div>
 

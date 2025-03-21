@@ -30,6 +30,7 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
  */
 export interface PasswordStrengthIndicatorProps {
   strength: number;
+  password?: string;
 }
 
 /**

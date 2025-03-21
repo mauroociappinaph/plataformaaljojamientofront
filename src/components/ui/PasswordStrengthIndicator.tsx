@@ -47,7 +47,6 @@ export default function PasswordStrengthIndicator({
     }
   };
 
-  // Obtenemos los criterios de la contraseña utilizando la función de utilidad
   const {
     hasMinLength,
     hasLowercase,
