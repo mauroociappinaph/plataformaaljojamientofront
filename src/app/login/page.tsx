@@ -1,9 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import FormInput from '@/components/ui/FormInput';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import Button from '@/components/ui/button';
+import { FormInput, Button, ErrorMessage } from '@/components/ui';
 import { useLoginForm } from '@/hooks/form/useLoginForm';
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 

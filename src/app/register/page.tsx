@@ -1,12 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import FormInput from '@/components/ui/FormInput';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import Button from '@/components/ui/button';
+import { FormInput, Button, ErrorMessage, PasswordStrengthIndicator } from '@/components/ui';
 import { useRegisterForm } from '@/hooks/form/useRegisterForm';
 import { UserIcon, EnvelopeIcon, LockClosedIcon, CheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import PasswordStrengthIndicator from '@/components/ui/PasswordStrengthIndicator';
 
 /**
  * Página de registro mejorada con mejor UI/UX y nueva paleta de colores
