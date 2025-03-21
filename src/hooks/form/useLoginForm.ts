@@ -3,17 +3,7 @@ import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
 import { LoginFormData, LoginFormErrors } from '@/types/forms.types';
-
-// Definición del esquema de validación con Yup
-const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Email inválido')
-    .required('El email es obligatorio'),
-  password: yup
-    .string()
-    .required('La contraseña es obligatoria'),
-});
+import { loginSchema } from '@/validations/authSchemas';
 
 /**
  * Hook personalizado para manejar el formulario de inicio de sesión

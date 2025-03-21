@@ -3,51 +3,8 @@ import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormData, RegisterFormErrors } from '@/types/forms.types';
-
-// Definición del esquema de validación con Yup
-const registerSchema = yup.object().shape({
-  name: yup.string().required('El nombre es obligatorio'),
-  email: yup
-    .string()
-    .email('Email inválido')
-    .required('El email es obligatorio'),
-  password: yup
-    .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
-    .required('La contraseña es obligatoria'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
-    .required('Confirma tu contraseña'),
-});
-
-/**
- * Calcula la fortaleza de una contraseña del 0-4
- * 0: Sin contraseña o muy débil
- * 1: Débil (solo letras o solo números)
- * 2: Moderada (letras y números)
- * 3: Buena (letras, números y al menos 8 caracteres)
- * 4: Fuerte (letras, números, caracteres especiales y al menos 8 caracteres)
- */
-function calculatePasswordStrength(password: string): number {
-  if (!password) return 0;
-
-  let strength = 0;
-
-  // Si tiene al menos un carácter
-  if (password.length > 0) strength = 1;
-
-  // Si tiene letras y números
-  if (/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) strength = 2;
-
-  // Si tiene al menos 8 caracteres y tiene letras y números
-  if (password.length >= 8 && strength === 2) strength = 3;
-
-  // Si tiene caracteres especiales y al menos 8 caracteres
-  if (/[^a-zA-Z0-9]/.test(password) && password.length >= 8) strength = 4;
-
-  return strength;
-}
+import { calculatePasswordStrength } from '@/utils/passwordUtils';
+import { registerSchema } from '@/validations/authSchemas';
 
 /**
  * Hook personalizado para manejar el formulario de registro
