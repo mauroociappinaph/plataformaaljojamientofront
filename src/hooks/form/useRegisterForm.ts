@@ -1,134 +1,81 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormData, RegisterFormErrors } from '@/types/forms.types';
 import { calculatePasswordStrength } from '@/utils/passwordUtils';
 import { registerSchema } from '@/validations/formValidationSchemas';
+import { useForm } from './useForm';
+import { useDoublePasswordVisibility } from './usePasswordVisibility';
 
 /**
  * Hook personalizado para manejar el formulario de registro
  */
 export function useRegisterForm() {
   const router = useRouter();
-  const { register, isLoading, error, clearError } = useAuth();
-
-  // Estado del formulario
-  const [formData, setFormData] = useState<RegisterFormData>({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  // Estado para errores de validación
-  const [validationErrors, setValidationErrors] = useState<RegisterFormErrors>({});
+  const { register, isLoading: authLoading, error: authError } = useAuth();
 
   // Estado para la fortaleza de la contraseña
   const [passwordStrength, setPasswordStrength] = useState<number>(0);
 
-  // Estados para mostrar/ocultar contraseñas
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Formulario genérico para registro
+  const form = useForm<RegisterFormData, RegisterFormErrors>({
+    initialData: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema: registerSchema,
+    onSubmit: async (data) => {
+      // Enviar datos al servicio de registro
+      const success = await register({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
 
-  // Funciones para alternar visibilidad de contraseñas
-  const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
-  };
+      // Redireccionar si el registro fue exitoso
+      if (success) {
+        router.push('/dashboard');
+      }
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(prev => !prev);
-  };
+      return success;
+    }
+  });
 
   // Actualizar la fortaleza de la contraseña cuando cambie
   useEffect(() => {
-    setPasswordStrength(calculatePasswordStrength(formData.password));
-  }, [formData.password]);
+    setPasswordStrength(calculatePasswordStrength(form.formData.password));
+  }, [form.formData.password]);
 
-  /**
-   * Maneja los cambios en los inputs del formulario
-   */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  // Manejo de visibilidad de contraseñas
+  const passwordVisibility = useDoublePasswordVisibility();
 
-    // Actualizar el estado del formulario
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    // Limpiar error de validación para este campo
-    if (validationErrors[name as keyof RegisterFormData]) {
-      setValidationErrors({
-        ...validationErrors,
-        [name]: undefined,
-      });
+  // Sincronizar errores del servicio de autenticación con el formulario
+  useEffect(() => {
+    if (authError) {
+      form.setError(authError);
     }
-
-    // Limpiar errores del backend
-    if (error) {
-      clearError();
-    }
-  };
-
-  /**
-   * Valida el formulario usando Yup
-   */
-  const validateForm = async (): Promise<boolean> => {
-    try {
-      // Validar todos los campos contra el esquema
-      await registerSchema.validate(formData, { abortEarly: false });
-      setValidationErrors({});
-      return true;
-    } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        // Transformar errores de Yup al formato de nuestro estado
-        const errors: RegisterFormErrors = {};
-        error.inner.forEach((err) => {
-          if (err.path) {
-            errors[err.path as keyof RegisterFormErrors] = err.message;
-          }
-        });
-        setValidationErrors(errors);
-      }
-      return false;
-    }
-  };
-
-  /**
-   * Maneja el envío del formulario
-   */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validar el formulario
-    const isValid = await validateForm();
-    if (!isValid) return;
-
-    // Enviar datos al servicio de registro
-    const success = await register({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    });
-
-    // Redireccionar si el registro fue exitoso
-    if (success) {
-      router.push('/dashboard');
-    }
-  };
+  }, [authError]);
 
   return {
-    formData,
-    validationErrors,
-    isLoading,
-    error,
-    handleChange,
-    handleSubmit,
+    // Propiedades del formulario
+    formData: form.formData,
+    validationErrors: form.validationErrors,
+    isLoading: form.isLoading || authLoading,
+    error: form.error || authError,
+    handleChange: form.handleChange,
+    handleSubmit: form.handleSubmit,
+
+    // Fortaleza de la contraseña
     passwordStrength,
-    showPassword,
-    showConfirmPassword,
-    togglePasswordVisibility,
-    toggleConfirmPasswordVisibility
+
+    // Visibilidad de contraseñas
+    showPassword: passwordVisibility.showPassword,
+    showConfirmPassword: passwordVisibility.showConfirmPassword,
+    togglePasswordVisibility: passwordVisibility.togglePasswordVisibility,
+    toggleConfirmPasswordVisibility: passwordVisibility.toggleConfirmPasswordVisibility,
+    passwordInputType: passwordVisibility.passwordInputType,
+    confirmPasswordInputType: passwordVisibility.confirmPasswordInputType
   };
 }
