@@ -69,7 +69,10 @@ export const register = async (userData: RegisterDTO): Promise<User> => {
  */
 export const forgotPassword = async (payload: ForgotPasswordDTO): Promise<PasswordResetResponse> => {
   try {
-    const { data, error } = await http.post<PasswordResetResponse>('/auth/forgot-password', payload);
+    console.log('Enviando solicitud a /auth/forgot-password con datos:', payload);
+    const { data, error, status } = await http.post<PasswordResetResponse>('/auth/forgot-password', payload);
+
+    console.log('Respuesta recibida:', { data, error, status });
 
     if (error) {
       throw new Error(error);
