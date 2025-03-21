@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormData, RegisterFormErrors } from '@/types/forms.types';
 import { calculatePasswordStrength } from '@/utils/passwordUtils';
-import { registerSchema } from '@/validations/authSchemas';
+import { registerSchema } from '@/validations/formValidationSchemas';
 
 /**
  * Hook personalizado para manejar el formulario de registro

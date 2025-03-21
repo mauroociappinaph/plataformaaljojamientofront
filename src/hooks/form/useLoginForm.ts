@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import { useAuth } from '@/hooks/useAuth';
 import { LoginFormData, LoginFormErrors } from '@/types/forms.types';
-import { loginSchema } from '@/validations/authSchemas';
+import { loginSchema } from '@/validations/formValidationSchemas';
 
 /**
  * Hook personalizado para manejar el formulario de inicio de sesión
