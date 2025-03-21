@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FormInput, Button, ErrorMessage, PasswordStrengthIndicator } from '@/components/ui';
 import { useRegisterForm } from '@/hooks/form/useRegisterForm';
 import { UserIcon, EnvelopeIcon, LockClosedIcon, CheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { ROUTES } from '@/constants/routes';
 
 /**
  * Página de registro mejorada con mejor UI/UX y nueva paleta de colores
@@ -35,7 +36,7 @@ export default function RegisterPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             O{' '}
-            <Link href="/login" className="font-medium text-vacacional-texto hover:text-vacacional-salvia transition-colors duration-200">
+            <Link href={ROUTES.LOGIN} className="font-medium text-vacacional-texto hover:text-vacacional-salvia transition-colors duration-200">
               inicia sesión con tu cuenta existente
             </Link>
           </p>
