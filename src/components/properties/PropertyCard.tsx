@@ -1,14 +1,31 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeartIcon, StarIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
-import { useState } from 'react';
 import { PropertyCardProps } from '@/types/property.types';
-import { ROUTES } from '@/constants/routes';
-import { usePropertyFavorite, useFormatPrice, useTruncateText } from '@/hooks';
+import { usePropertyFavorite, usePropertyCard } from '@/hooks';
 
-export function PropertyCard({ property, onFavoriteToggle, isFavorite = false }: PropertyCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
+export function PropertyCard({
+  property,
+  onFavoriteToggle,
+  isFavorite = false,
+  gridConfig
+}: PropertyCardProps) {
+  // Usar el hook para la lógica de la tarjeta
+  const {
+    isHovered,
+    hoverHandlers,
+    propertyLink,
+    isSmallCard,
+    hideDescription,
+    formattedPrice,
+    truncatedDescription
+  } = usePropertyCard({
+    property,
+    gridConfig
+  });
 
   // Usar el hook de favoritos
   const { isFavorite: favorite, handleFavoriteClick } = usePropertyFavorite(
@@ -17,23 +34,15 @@ export function PropertyCard({ property, onFavoriteToggle, isFavorite = false }:
     onFavoriteToggle
   );
 
-  // Usar el hook para formatear precios
-  const formatPrice = useFormatPrice('ARS');
-  const formattedPrice = formatPrice(property.price);
-
-  // Usar el hook para truncar textos
-  const truncateText = useTruncateText();
-  const truncatedDescription = truncateText(property.description, 100);
-
   return (
     <Link
-      href={ROUTES.PROPERTY_DETAIL(property.id)}
+      href={propertyLink}
       className="flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={hoverHandlers.onMouseEnter}
+      onMouseLeave={hoverHandlers.onMouseLeave}
     >
       {/* Imagen principal y favorito */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className={`relative ${isSmallCard ? 'aspect-[4/3]' : 'aspect-[3/2]'} w-full overflow-hidden`}>
         {property.images && property.images.length > 0 ? (
           <Image
             src={property.images[0]}
@@ -50,7 +59,10 @@ export function PropertyCard({ property, onFavoriteToggle, isFavorite = false }:
 
         {/* Botón de favorito */}
         <button
-          onClick={handleFavoriteClick}
+          onClick={(e) => {
+            e.preventDefault();
+            handleFavoriteClick(e);
+          }}
           className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full transition-colors hover:bg-white z-10"
           aria-label={favorite ? "Quitar de favoritos" : "Agregar a favoritos"}
         >
@@ -78,14 +90,16 @@ export function PropertyCard({ property, onFavoriteToggle, isFavorite = false }:
         </div>
 
         {/* Título */}
-        <h3 className="text-lg font-semibold text-vacacional-texto mb-1 line-clamp-2">
+        <h3 className={`${isSmallCard ? 'text-base' : 'text-lg'} font-semibold text-vacacional-texto mb-1 line-clamp-2`}>
           {property.title}
         </h3>
 
         {/* Descripción corta */}
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {truncatedDescription}
-        </p>
+        {!hideDescription && (
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+            {truncatedDescription}
+          </p>
+        )}
 
         {/* Características principales */}
         <div className="flex gap-3 text-sm text-gray-600 mb-4">
@@ -99,7 +113,7 @@ export function PropertyCard({ property, onFavoriteToggle, isFavorite = false }:
         {/* Precio y valoración */}
         <div className="flex items-end justify-between mt-auto pt-2 border-t border-gray-100">
           <div>
-            <span className="text-lg font-bold text-vacacional-texto">{formattedPrice}</span>
+            <span className={`${isSmallCard ? 'text-base' : 'text-lg'} font-bold text-vacacional-texto`}>{formattedPrice}</span>
             <span className="text-sm text-gray-500"> /noche</span>
           </div>
 

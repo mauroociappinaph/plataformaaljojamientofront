@@ -1,3 +1,5 @@
+'use client';
+
 import { PropertyListProps } from '@/types/property.types';
 import { PropertyCard } from './PropertyCard';
 import { usePropertyList, usePropertyGrid } from '@/hooks';
