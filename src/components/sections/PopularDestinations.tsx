@@ -48,10 +48,10 @@ const destinations: Destination[] = [
 
 export function PopularDestinations() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-vacacional-crema/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Destinos populares</h2>
+          <h2 className="text-3xl font-bold text-vacacional-texto mb-3">Destinos populares</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Descubre los lugares más buscados por nuestros viajeros y comienza a planear tu próxima aventura
           </p>
@@ -71,7 +71,7 @@ export function PopularDestinations() {
                   height={533}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-vacacional-texto/80 to-transparent opacity-80"></div>
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -92,7 +92,7 @@ export function PopularDestinations() {
         <div className="mt-12 text-center">
           <Link
             href="/search"
-            className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 rounded-lg bg-vacacional-salvia text-white font-medium hover:bg-vacacional-texto transition-colors"
           >
             Explorar todos los destinos
             <ArrowRightIcon className="ml-2 h-5 w-5" />

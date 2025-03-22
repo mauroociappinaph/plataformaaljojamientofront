@@ -50,7 +50,7 @@ export function TestimonialsSection() {
     <section className="py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900">Lo que dicen nuestros usuarios</h2>
+          <h2 className="text-3xl font-bold text-vacacional-texto">Lo que dicen nuestros usuarios</h2>
           <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
             Miles de viajeros confían en nosotros para encontrar el alojamiento perfecto.
             Descubre sus experiencias y únete a nuestra comunidad.
@@ -59,7 +59,7 @@ export function TestimonialsSection() {
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div key={testimonial.id} className="bg-vacacional-gris-verde/20 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center mb-4">
                 <Image
                   src={testimonial.image}
@@ -69,7 +69,7 @@ export function TestimonialsSection() {
                   className="rounded-full"
                 />
                 <div className="ml-4">
-                  <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
+                  <h3 className="font-semibold text-vacacional-texto">{testimonial.name}</h3>
                   <p className="text-sm text-gray-600">{testimonial.location}</p>
                 </div>
               </div>
@@ -78,7 +78,7 @@ export function TestimonialsSection() {
                 {[...Array(5)].map((_, i) => (
                   <StarIcon
                     key={i}
-                    className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                    className={`h-5 w-5 ${i < testimonial.rating ? 'text-vacacional-salvia' : 'text-gray-300'}`}
                   />
                 ))}
               </div>
@@ -87,8 +87,8 @@ export function TestimonialsSection() {
                 &ldquo;{testimonial.comment}&rdquo;
               </blockquote>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">{testimonial.propertyType}</p>
+              <div className="mt-4 pt-4 border-t border-vacacional-crema">
+                <p className="text-sm text-vacacional-texto">{testimonial.propertyType}</p>
                 <p className="text-xs text-gray-400 mt-1">Visitado en {testimonial.date}</p>
               </div>
             </div>
@@ -96,8 +96,8 @@ export function TestimonialsSection() {
         </div>
 
         <div className="mt-16 text-center">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">¿Ya has disfrutado de una estancia con nosotros?</h3>
-          <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+          <h3 className="text-xl font-semibold text-vacacional-texto mb-4">¿Ya has disfrutado de una estancia con nosotros?</h3>
+          <button className="px-6 py-3 bg-vacacional-salvia text-white font-medium rounded-lg hover:bg-vacacional-texto transition-colors">
             Dejar mi opinión
           </button>
         </div>
