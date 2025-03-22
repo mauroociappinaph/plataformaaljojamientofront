@@ -16,5 +16,6 @@ export interface UseHeroSectionReturn {
   setShowMobileSearch: (show: boolean) => void;
   toggleMobileSearch: () => void;
   containerAnimation: Variants;
+
   itemAnimation: Variants;
 }
