@@ -112,3 +112,26 @@ export interface PaginatedPropertyResponse {
   data: Property[];
   total: number;
 }
+
+/**
+ * Props para el componente PropertyCard
+ */
+export interface PropertyCardProps {
+  property: Property;
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+  isFavorite?: boolean;
+}
+
+/**
+ * Props para el componente PropertyList
+ */
+export interface PropertyListProps {
+  properties: Property[];
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+  favorites?: string[];
+  isLoading?: boolean;
+  emptyMessage?: string;
+  gridConfig?: import('@/hooks/property/usePropertyGrid').PropertyGridConfig;
+  renderLoadingSkeleton?: () => React.ReactNode;
+  renderEmptyState?: (message: string) => React.ReactNode;
+}

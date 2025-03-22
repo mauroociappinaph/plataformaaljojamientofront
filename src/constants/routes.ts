@@ -32,3 +32,8 @@ export const ROUTES = {
   PROPERTY_EDIT: (id: string) => `/properties/${id}/edit`,
   PROPERTY_DELETE: (id: string) => `/properties/${id}/delete`,
 } as const;
+
+/**
+ * Constantes para los endpoints de la API
+ */
+export const PROPERTIES_ENDPOINT = '/properties';
