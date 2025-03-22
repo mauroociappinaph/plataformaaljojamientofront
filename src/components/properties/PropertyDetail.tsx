@@ -27,7 +27,6 @@ export function PropertyDetail({
   initialData,
   isFavorite: initialIsFavorite = false,
   onFavoriteToggle,
-  onBookingClick,
   initialImageIndex = 0
 }: PropertyDetailProps) {
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -117,9 +116,10 @@ export function PropertyDetail({
 
   // Función para manejar el clic en el botón de reserva
   const handleBookingClick = () => {
-    if (onBookingClick) {
-      onBookingClick(propertyId);
-    }
+    // Implementación local del booking
+    console.log(`Iniciar reserva para propiedad: ${propertyId}`);
+    // En un caso real, aquí redirigirías a la página de reserva
+    // o mostrarías un modal para completar la reserva
   };
 
   // Preparar la descripción para mostrarla completa o truncada

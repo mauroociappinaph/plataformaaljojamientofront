@@ -114,12 +114,48 @@ export interface PaginatedPropertyResponse {
 }
 
 /**
+ * Configuración de la tarjeta de propiedad
+ */
+export interface PropertyCardConfig {
+  /**
+   * Ruta personalizada para el enlace
+   */
+  linkTo?: string;
+
+  /**
+   * Tamaño del card (normal o pequeño)
+   */
+  cardSize?: 'normal' | 'sm' | 'lg';
+
+  /**
+   * Si se debe ocultar la descripción
+   */
+  hideDescription?: boolean;
+}
+
+/**
  * Props para el componente PropertyCard
  */
 export interface PropertyCardProps {
+  /**
+   * Datos de la propiedad a mostrar
+   */
   property: Property;
+
+  /**
+   * Función para notificar cambio en estado de favorito
+   */
   onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+
+  /**
+   * Estado inicial de favorito
+   */
   isFavorite?: boolean;
+
+  /**
+   * Configuración del grid para esta tarjeta
+   */
+  gridConfig?: PropertyCardConfig;
 }
 
 /**
@@ -134,4 +170,34 @@ export interface PropertyListProps {
   gridConfig?: import('@/hooks/property/usePropertyGrid').PropertyGridConfig;
   renderLoadingSkeleton?: () => React.ReactNode;
   renderEmptyState?: (message: string) => React.ReactNode;
+}
+
+/**
+ * Props para el componente PropertyDetail
+ */
+export interface PropertyDetailProps {
+  /**
+   * ID de la propiedad a mostrar
+   */
+  propertyId: string;
+
+  /**
+   * Datos iniciales de la propiedad (opcional, para SSR)
+   */
+  initialData?: Property | null;
+
+  /**
+   * Indicador de si la propiedad es favorita
+   */
+  isFavorite?: boolean;
+
+  /**
+   * Función para manejar agregar/quitar de favoritos
+   */
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+
+  /**
+   * Índice inicial de la imagen a mostrar
+   */
+  initialImageIndex?: number;
 }
