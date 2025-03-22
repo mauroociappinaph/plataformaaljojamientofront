@@ -6,22 +6,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavbar } from "@/hooks/useNavbar";
 
 export function Navbar() {
-  const { isScrolled, showMenu, toggleMenu } = useNavbar();
+  const { isScrolled, isAtTop, showMenu, toggleMenu } = useNavbar();
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 w-full bg-white z-50 will-change-transform"
+      className={`fixed top-0 left-0 right-0 w-full z-50 will-change-transform transition-colors duration-300 ${
+        isAtTop ? 'bg-transparent' : 'bg-white'
+      }`}
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
     >
       <motion.div
-        className="w-full border-b border-gray-200 will-change-[height,box-shadow]"
+        className={`w-full will-change-[height,box-shadow] ${
+          isAtTop ? '' : 'border-b border-gray-200'
+        }`}
         animate={{
           height: isScrolled ? 64 : 80,
-          boxShadow: isScrolled
-            ? "0 2px 8px rgba(0, 0, 0, 0.08)"
-            : "0 1px 2px rgba(0, 0, 0, 0.02)"
+          boxShadow: isAtTop
+            ? "none"
+            : (isScrolled
+                ? "0 2px 8px rgba(0, 0, 0, 0.08)"
+                : "0 1px 2px rgba(0, 0, 0, 0.02)")
         }}
         transition={{
           type: "spring",
@@ -35,7 +41,9 @@ export function Navbar() {
           <motion.div layout="position">
             <Link href="/" className="flex items-center space-x-2">
               <motion.span
-                className="font-bold text-vacacional-salvia will-change-[font-size]"
+                className={`font-bold will-change-[font-size] ${
+                  isAtTop ? 'text-white' : 'text-vacacional-salvia'
+                }`}
                 animate={{
                   fontSize: isScrolled ? "1.1rem" : "1.25rem"
                 }}
@@ -49,7 +57,9 @@ export function Navbar() {
           {/* Barra de búsqueda central tipo Airbnb - Optimizada */}
           <motion.div
             layout="position"
-            className="hidden lg:flex items-center justify-center rounded-full border border-gray-200 shadow-sm divide-x bg-white will-change-transform"
+            className={`hidden lg:flex items-center justify-center rounded-full border border-gray-200 shadow-sm divide-x will-change-transform ${
+              isAtTop ? 'bg-white/90 backdrop-blur-sm' : 'bg-white'
+            }`}
             animate={{
               scale: isScrolled ? 0.95 : 1,
               y: isScrolled ? -2 : 0
@@ -131,7 +141,14 @@ export function Navbar() {
 
           {/* Botón de búsqueda móvil */}
           <div className="lg:hidden">
-            <Button variant="ghost" className="rounded-full p-2 border border-gray-200 shadow-sm">
+            <Button
+              variant="ghost"
+              className={`rounded-full p-2 shadow-sm ${
+                isAtTop
+                  ? 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30'
+                  : 'border border-gray-200 text-vacacional-texto'
+              }`}
+            >
               <Search className="h-5 w-5" />
             </Button>
           </div>
@@ -139,16 +156,17 @@ export function Navbar() {
           {/* Navigation Items - Corregidos */}
           <div className="flex items-center space-x-3">
             {/* Botón "Poné tu Alojamiento" - Fijo siempre visible en pantallas md+ */}
-            <div className="hidden md:block">
-              <Link href="#">
-                <Button variant="ghost" className="text-vacacional-texto hover:bg-vacacional-crema/40 transition-colors duration-200">
-                  Poné tu Alojamiento
-                </Button>
-              </Link>
-            </div>
+
 
             {/* Icono Globe - Siempre visible */}
-            <Button variant="ghost" className="rounded-full p-2 text-vacacional-texto hover:bg-vacacional-crema/40 transition-colors duration-200">
+            <Button
+              variant="ghost"
+              className={`rounded-full p-2 transition-colors duration-200 ${
+                isAtTop
+                  ? 'text-white hover:bg-white/20'
+                  : 'text-vacacional-texto hover:bg-vacacional-crema/40'
+              }`}
+            >
               <Globe className="h-5 w-5" />
             </Button>
 
@@ -156,11 +174,15 @@ export function Navbar() {
             <div className="relative">
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 rounded-full border border-gray-200 p-2 shadow-sm hover:shadow-md transition-shadow duration-200"
+                className={`flex items-center space-x-2 rounded-full p-2 shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                  isAtTop
+                    ? 'bg-white/20 backdrop-blur-sm border-transparent'
+                    : 'border border-gray-200'
+                }`}
                 onClick={toggleMenu}
               >
-                <Menu className="h-4 w-4" />
-                <User className="h-6 w-6 text-gray-500" />
+                <Menu className={`h-4 w-4 ${isAtTop ? 'text-white' : ''}`} />
+                <User className={`h-6 w-6 ${isAtTop ? 'text-white' : 'text-gray-500'}`} />
               </Button>
 
               <AnimatePresence>

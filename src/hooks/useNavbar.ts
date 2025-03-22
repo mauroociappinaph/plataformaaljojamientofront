@@ -3,6 +3,7 @@ import { UseNavbarReturn } from '@/types/navbar.types';
 
 export const useNavbar = (): UseNavbarReturn => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true); // Estado para saber si estamos al inicio de la página
   const [showMenu, setShowMenu] = useState(false);
   const prevScrollY = useRef(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -19,17 +20,25 @@ export const useNavbar = (): UseNavbarReturn => {
       const currentScrollY = window.scrollY;
       // Solo actualizamos si hubo un cambio significativo y el estado debe cambiar
       const shouldBeScrolled = currentScrollY > 20;
+      const shouldBeAtTop = currentScrollY < 10;
 
       if (isScrolled !== shouldBeScrolled) {
         setIsScrolled(shouldBeScrolled);
       }
 
+      if (isAtTop !== shouldBeAtTop) {
+        setIsAtTop(shouldBeAtTop);
+      }
+
       prevScrollY.current = currentScrollY;
     });
-  }, [isScrolled]);
+  }, [isScrolled, isAtTop]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
+    // Verificar la posición inicial al montar
+    handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       if (scrollTimeout.current) {
@@ -44,6 +53,7 @@ export const useNavbar = (): UseNavbarReturn => {
 
   return {
     isScrolled,
+    isAtTop,
     showMenu,
     toggleMenu,
   };
