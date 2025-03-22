@@ -19,7 +19,7 @@ const testimonials: Testimonial[] = [
     location: "Madrid, España",
     image: "https://randomuser.me/api/portraits/women/12.jpg",
     rating: 5,
-    comment: "Increíble experiencia. El apartamento era exactamente como en las fotos, muy limpio y en una ubicación perfecta. La comunicación con el anfitrión fue excelente. ¡Definitivamente volveré a usar esta plataforma!",
+    comment: "Increíble experiencia. El apartamento era exactamente como en las fotos, muy limpio y en una ubicación perfecta. El sistema de búsqueda me ayudó a encontrar justo lo que necesitaba. ¡Definitivamente volveré a usar esta plataforma!",
     date: "Marzo 2023",
     propertyType: "Apartamento en Barcelona"
   },
@@ -29,7 +29,7 @@ const testimonials: Testimonial[] = [
     location: "Buenos Aires, Argentina",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 4,
-    comment: "Muy buena experiencia en general. La casa era espaciosa y cómoda, perfecta para nuestro viaje familiar. El único pequeño inconveniente fue el check-in tardío, pero el anfitrión fue muy amable y nos compensó con un detalle.",
+    comment: "La búsqueda de alojamiento fue muy sencilla y el asistente virtual me ayudó a encontrar la casa perfecta para nuestra familia. El único pequeño inconveniente fue el check-in tardío, pero el anfitrión fue muy amable y nos compensó.",
     date: "Enero 2023",
     propertyType: "Casa en Mendoza"
   },
@@ -39,7 +39,7 @@ const testimonials: Testimonial[] = [
     location: "Lyon, Francia",
     image: "https://randomuser.me/api/portraits/women/65.jpg",
     rating: 5,
-    comment: "¡Una experiencia extraordinaria! La villa tenía unas vistas impresionantes al mar y todas las comodidades que podríamos desear. El proceso de reserva fue sencillo y el soporte al cliente excelente. Ya estamos planeando nuestro próximo viaje.",
+    comment: "¡El sistema de recomendaciones personalizadas es extraordinario! Me sugirió villas que coincidían exactamente con mis preferencias. La villa tenía unas vistas impresionantes al mar. El proceso de reserva fue sencillo y rápido.",
     date: "Julio 2023",
     propertyType: "Villa en Costa Azul"
   },
@@ -50,10 +50,10 @@ export function TestimonialsSection() {
     <section className="py-20 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-vacacional-texto">Lo que dicen nuestros usuarios</h2>
+          <h2 className="text-3xl font-bold text-vacacional-texto">Opiniones sobre nuestros alojamientos</h2>
           <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-            Miles de viajeros confían en nosotros para encontrar el alojamiento perfecto.
-            Descubre sus experiencias y únete a nuestra comunidad.
+            Miles de huéspedes confían en nosotros para encontrar el alojamiento perfecto.
+            Descubre sus experiencias con nuestra plataforma de búsqueda.
           </p>
         </div>
 
@@ -89,16 +89,16 @@ export function TestimonialsSection() {
 
               <div className="mt-4 pt-4 border-t border-vacacional-crema">
                 <p className="text-sm text-vacacional-texto">{testimonial.propertyType}</p>
-                <p className="text-xs text-gray-400 mt-1">Visitado en {testimonial.date}</p>
+                <p className="text-xs text-gray-400 mt-1">Alojamiento reservado en {testimonial.date}</p>
               </div>
             </div>
           ))}
         </div>
 
         <div className="mt-16 text-center">
-          <h3 className="text-xl font-semibold text-vacacional-texto mb-4">¿Ya has disfrutado de una estancia con nosotros?</h3>
+          <h3 className="text-xl font-semibold text-vacacional-texto mb-4">¿Ya has reservado un alojamiento con nosotros?</h3>
           <button className="px-6 py-3 bg-vacacional-salvia text-white font-medium rounded-lg hover:bg-vacacional-texto transition-colors">
-            Dejar mi opinión
+            Dejar mi opinión sobre el alojamiento
           </button>
         </div>
       </div>
