@@ -3,7 +3,11 @@
  */
 
 // Auth services
-export * from './auth';
+export * from './auth/index';
+
+// Property services
+export * from './property/index';
 
 // Al añadir más servicios, exportarlos desde aquí
-// Ejemplo: export * from './properties';
+// Ejemplo: export * from './bookings';
+

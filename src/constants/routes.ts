@@ -14,10 +14,6 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
 
-  // Rutas de propiedades
-  PROPERTIES: '/properties',
-  PROPERTY_DETAIL: (id: string) => `/properties/${id}`,
-  PROPERTY_CREATE: '/properties/create',
 
   // Rutas de reservas
   BOOKINGS: '/bookings',
@@ -29,4 +25,10 @@ export const ROUTES = {
 
   VERIFY_EMAIL: (token: string) => `/verify-email/${token}`,
   RESEND_VERIFICATION: '/resend-verification',
+
+  // Rutas de propiedades
+  PROPERTY_DETAIL: (id: string) => `/properties/${id}`,
+  PROPERTY_CREATE: '/properties/create',
+  PROPERTY_EDIT: (id: string) => `/properties/${id}/edit`,
+  PROPERTY_DELETE: (id: string) => `/properties/${id}/delete`,
 } as const;
