@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/store/auth.store';
 import { LoginDTO, RegisterDTO, User } from '@/types/auth.types';
-import { login as apiLogin, register as apiRegister, logout as apiLogout, verifyToken as apiVerifyToken } from '@/lib/api/auth';
+import { login as apiLogin, register as apiRegister, logout as apiLogout, verifyToken as apiVerifyToken } from '@/lib/api';
 import { useCallback } from 'react';
 
 /**

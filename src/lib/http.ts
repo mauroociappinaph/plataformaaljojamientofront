@@ -1,7 +1,7 @@
 import { HttpClient, RequestOptions, ApiResponse, HttpMethod } from '@/types/http.types';
 
 // URL base de la API
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 /**
  * Cliente HTTP para realizar peticiones a la API
@@ -80,7 +80,10 @@ export const http: HttpClient = {
     retriesLeft: number
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await fetch(`${API_URL}${endpoint}`, {
+      const url = `${API_URL}${endpoint}`;
+      console.log(`[HTTP] ${method} ${url}`, { headers, body: body ? JSON.stringify(body) : undefined });
+
+      const response = await fetch(url, {
         method,
         headers,
         body: body ? JSON.stringify(body) : undefined,
@@ -88,11 +91,18 @@ export const http: HttpClient = {
         signal,
       });
 
+      console.log(`[HTTP] Respuesta de ${url}:`, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries([...response.headers.entries()])
+      });
+
       // Obtener datos de respuesta
       let data = null;
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         data = await response.json();
+        console.log(`[HTTP] Datos de respuesta:`, data);
       }
 
       // Si la respuesta no es exitosa

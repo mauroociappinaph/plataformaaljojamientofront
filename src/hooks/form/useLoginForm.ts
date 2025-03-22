@@ -5,6 +5,7 @@ import { LoginFormData, LoginFormErrors } from '@/types/forms.types';
 import { loginSchema } from '@/validations/formValidationSchemas';
 import { useForm } from './useForm';
 import { usePasswordVisibility } from './usePasswordVisibility';
+import { ROUTES } from '@/constants/routes';
 
 /**
  * Hook personalizado para manejar el formulario de inicio de sesión
@@ -29,7 +30,7 @@ export function useLoginForm() {
 
       // Redireccionar si el login fue exitoso
       if (success) {
-        router.push('/dashboard');
+        router.push(ROUTES.DASHBOARD);
       }
 
       return success;

@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import FormInput from '@/components/ui/FormInput';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import Button from '@/components/ui/button';
+import { FormInput, Button, ErrorMessage } from '@/components/ui';
 import { useLoginForm } from '@/hooks/form/useLoginForm';
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { ROUTES } from '@/constants/routes';
 
 /**
  * Página de login con la paleta de colores vacacional
@@ -47,7 +46,7 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             O{' '}
-            <Link href="/register" className="font-medium text-vacacional-salvia hover:text-vacacional-menta transition-colors duration-200">
+            <Link href={ROUTES.REGISTER} className="font-medium text-vacacional-salvia hover:text-vacacional-menta transition-colors duration-200">
               crea una cuenta nueva
             </Link>
           </p>
