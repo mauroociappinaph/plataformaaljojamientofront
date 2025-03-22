@@ -5,10 +5,12 @@ import Button from "../ui/Button/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavbar } from "@/hooks/useNavbar";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Navbar() {
   const { isScrolled, isAtTop, showMenu, toggleMenu } = useNavbar();
   const pathname = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Determinar si estamos en la página de inicio
   const isHomePage = pathname === "/";
@@ -17,6 +19,14 @@ export function Navbar() {
   // En otras páginas, siempre mostrar navbar con fondo
   const useTransparentBg = isHomePage && isAtTop;
   const textColor = useTransparentBg ? 'text-white' : 'text-vacacional-salvia';
+
+  // Verificar si estamos en el dashboard (para no mostrar el navbar ahí)
+  const isDashboard = pathname.startsWith('/dashboard');
+
+  // No mostrar el navbar en el dashboard
+  if (isDashboard) {
+    return null;
+  }
 
   return (
     <motion.header
@@ -187,7 +197,15 @@ export function Navbar() {
                 onClick={toggleMenu}
               >
                 <Menu className={`h-4 w-4 ${useTransparentBg ? 'text-white' : ''}`} />
-                <User className={`h-6 w-6 ${useTransparentBg ? 'text-white' : 'text-gray-500'}`} />
+                {isAuthenticated && user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="h-6 w-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className={`h-6 w-6 ${useTransparentBg ? 'text-white' : 'text-gray-500'}`} />
+                )}
               </Button>
 
               <AnimatePresence>
@@ -204,15 +222,46 @@ export function Navbar() {
                     className="absolute right-0 mt-2 w-48 rounded-lg bg-white py-1 shadow-lg"
                     style={{ transformOrigin: "top right" }}
                   >
-                    <Link href="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
-                      Registrate
-                    </Link>
-                    <Link href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
-                      Iniciar sesión
-                    </Link>
-                    <Link href="/properties" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
-                      Ver propiedades
-                    </Link>
+                    {isAuthenticated ? (
+                      // Menú para usuarios logueados
+                      <>
+                        <div className="px-4 py-2 border-b border-gray-100">
+                          <p className="text-sm font-medium truncate">{user?.name || 'Usuario'}</p>
+                          <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                        </div>
+
+                        <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Mi cuenta
+                        </Link>
+                        <Link href="/properties" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Ver propiedades
+                        </Link>
+                        {(user?.role === 'HOST' || user?.role === 'ADMIN') && (
+                          <Link href="/properties/create" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                            Crear propiedad
+                          </Link>
+                        )}
+                        <button
+                          onClick={logout}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150"
+                        >
+                          Cerrar sesión
+                        </button>
+                      </>
+                    ) : (
+                      // Menú para usuarios no logueados
+                      <>
+                        <Link href="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Registrate
+                        </Link>
+                        <Link href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Iniciar sesión
+                        </Link>
+                        <Link href="/properties" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Ver propiedades
+                        </Link>
+                      </>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
