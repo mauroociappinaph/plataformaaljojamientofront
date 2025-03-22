@@ -4,14 +4,24 @@ import { Search, Menu, Globe, User } from "lucide-react";
 import Button from "../ui/Button/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavbar } from "@/hooks/useNavbar";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
   const { isScrolled, isAtTop, showMenu, toggleMenu } = useNavbar();
+  const pathname = usePathname();
+
+  // Determinar si estamos en la página de inicio
+  const isHomePage = pathname === "/";
+
+  // En la página de inicio, mantener el comportamiento original
+  // En otras páginas, siempre mostrar navbar con fondo
+  const useTransparentBg = isHomePage && isAtTop;
+  const textColor = useTransparentBg ? 'text-white' : 'text-vacacional-salvia';
 
   return (
     <motion.header
       className={`fixed top-0 left-0 right-0 w-full z-50 will-change-transform transition-colors duration-300 ${
-        isAtTop ? 'bg-transparent' : 'bg-white'
+        useTransparentBg ? 'bg-transparent' : 'bg-white'
       }`}
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -19,11 +29,11 @@ export function Navbar() {
     >
       <motion.div
         className={`w-full will-change-[height,box-shadow] ${
-          isAtTop ? '' : 'border-b border-gray-200'
+          useTransparentBg ? '' : 'border-b border-gray-200'
         }`}
         animate={{
           height: isScrolled ? 64 : 80,
-          boxShadow: isAtTop
+          boxShadow: useTransparentBg
             ? "none"
             : (isScrolled
                 ? "0 2px 8px rgba(0, 0, 0, 0.08)"
@@ -41,9 +51,7 @@ export function Navbar() {
           <motion.div layout="position">
             <Link href="/" className="flex items-center space-x-2">
               <motion.span
-                className={`font-bold will-change-[font-size] ${
-                  isAtTop ? 'text-white' : 'text-vacacional-salvia'
-                }`}
+                className={`font-bold will-change-[font-size] ${textColor}`}
                 animate={{
                   fontSize: isScrolled ? "1.1rem" : "1.25rem"
                 }}
@@ -58,7 +66,7 @@ export function Navbar() {
           <motion.div
             layout="position"
             className={`hidden lg:flex items-center justify-center rounded-full border border-gray-200 shadow-sm divide-x will-change-transform ${
-              isAtTop ? 'bg-white/90 backdrop-blur-sm' : 'bg-white'
+              useTransparentBg ? 'bg-white/90 backdrop-blur-sm' : 'bg-white'
             }`}
             animate={{
               scale: isScrolled ? 0.95 : 1,
@@ -144,7 +152,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               className={`rounded-full p-2 shadow-sm ${
-                isAtTop
+                useTransparentBg
                   ? 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30'
                   : 'border border-gray-200 text-vacacional-texto'
               }`}
@@ -155,14 +163,11 @@ export function Navbar() {
 
           {/* Navigation Items - Corregidos */}
           <div className="flex items-center space-x-3">
-            {/* Botón "Poné tu Alojamiento" - Fijo siempre visible en pantallas md+ */}
-
-
             {/* Icono Globe - Siempre visible */}
             <Button
               variant="ghost"
               className={`rounded-full p-2 transition-colors duration-200 ${
-                isAtTop
+                useTransparentBg
                   ? 'text-white hover:bg-white/20'
                   : 'text-vacacional-texto hover:bg-vacacional-crema/40'
               }`}
@@ -175,14 +180,14 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 className={`flex items-center space-x-2 rounded-full p-2 shadow-sm hover:shadow-md transition-shadow duration-200 ${
-                  isAtTop
+                  useTransparentBg
                     ? 'bg-white/20 backdrop-blur-sm border-transparent'
                     : 'border border-gray-200'
                 }`}
                 onClick={toggleMenu}
               >
-                <Menu className={`h-4 w-4 ${isAtTop ? 'text-white' : ''}`} />
-                <User className={`h-6 w-6 ${isAtTop ? 'text-white' : 'text-gray-500'}`} />
+                <Menu className={`h-4 w-4 ${useTransparentBg ? 'text-white' : ''}`} />
+                <User className={`h-6 w-6 ${useTransparentBg ? 'text-white' : 'text-gray-500'}`} />
               </Button>
 
               <AnimatePresence>
@@ -204,6 +209,9 @@ export function Navbar() {
                     </Link>
                     <Link href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
                       Iniciar sesión
+                    </Link>
+                    <Link href="/properties" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                      Ver propiedades
                     </Link>
                   </motion.div>
                 )}
