@@ -1,5 +1,5 @@
 // Exportación de componentes UI con nombres consistentes
-export { default as Button } from '../ui/Button/Button';
+export { default as Button } from './Button/Button';
 export { default as FormInput } from './FormInput';
 export { default as PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 export { default as ErrorMessage } from './ErrorMessage';

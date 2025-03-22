@@ -180,3 +180,57 @@ export const verifyToken = async (): Promise<{ user: User }> => {
     throw new Error('Error desconocido al verificar la sesión');
   }
 };
+
+/**
+ * Verifica el email de un usuario con un token
+ * @param token Token de verificación
+ * @returns Mensaje de confirmación
+ */
+export const verifyEmail = async (token: string): Promise<{ message: string }> => {
+  try {
+    const { data, error } = await http.post<{ message: string }>('/auth/verify-email', { token });
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    if (!data) {
+      throw new Error('No se recibieron datos del servidor');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error al verificar email:', error.message);
+      throw error;
+    }
+    throw new Error('Error al verificar el email');
+  }
+};
+
+/**
+ * Reenvía el email de verificación
+ * @param email Email del usuario
+ * @returns Mensaje de confirmación
+ */
+export const resendVerificationEmail = async (email: string): Promise<{ message: string }> => {
+  try {
+    const { data, error } = await http.post<{ message: string }>('/auth/resend-verification', { email });
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    if (!data) {
+      throw new Error('No se recibieron datos del servidor');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error al reenviar email de verificación:', error.message);
+      throw error;
+    }
+    throw new Error('Error al reenviar el email de verificación');
+  }
+};

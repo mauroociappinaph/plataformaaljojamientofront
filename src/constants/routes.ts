@@ -26,4 +26,7 @@ export const ROUTES = {
   // Otras rutas
   SETTINGS: '/settings',
   HELP: '/help',
-};
+
+  VERIFY_EMAIL: (token: string) => `/verify-email/${token}`,
+  RESEND_VERIFICATION: '/resend-verification',
+} as const;
