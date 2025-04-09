@@ -38,7 +38,16 @@ export const ROUTES = {
 
   // Rutas de reservas
   BOOKINGS: '/bookings',
-  BOOKING_DETAIL: (id: string) => `/bookings/${id}`,
+  BOOKING_CREATE: '/bookings', // POST
+BOOKING_LIST: '/bookings', // GET (con filtros)
+BOOKING_DETAIL: (id: string) => `/bookings/${id}`,
+BOOKING_UPDATE: (id: string) => `/bookings/${id}`,
+BOOKING_DELETE: (id: string) => `/bookings/${id}`,
+BOOKING_UPDATE_STATUS: (id: string) => `/bookings/${id}/status`,
+BOOKING_UPDATE_PAYMENT: (id: string) => `/bookings/${id}/payment`,
+BOOKING_BY_PROPERTY: (propertyId: string) => `/bookings/property/${propertyId}`,
+BOOKING_BY_USER: '/bookings/user',
+
 
   // Otras rutas
   SETTINGS: '/settings',
@@ -52,18 +61,32 @@ export const ROUTES = {
  * Rutas protegidas que requieren autenticación
  */
 export const PROTECTED_ROUTES = [
+  // Dashboard
   ROUTES.DASHBOARD,
   ROUTES.DASHBOARD_PROPERTIES,
   ROUTES.DASHBOARD_RESERVATIONS,
   ROUTES.DASHBOARD_FAVORITES,
   ROUTES.DASHBOARD_PROFILE,
+
+  // Propiedades
   ROUTES.PROPERTY_CREATE,
   '/properties/create',
   '/dashboard',
-  '/dashboard/'
+  '/dashboard/',
+
+  // Bookings (protegidas por @UseGuards(JwtAuthGuard))
+  ROUTES.BOOKINGS,
+  ROUTES.BOOKING_BY_USER,
+  ROUTES.BOOKING_BY_PROPERTY(''), // puede usarse en verificación dinámica
+  ROUTES.BOOKING_DETAIL(''),
+  ROUTES.BOOKING_UPDATE(''),
+  ROUTES.BOOKING_DELETE(''),
+  ROUTES.BOOKING_UPDATE_STATUS(''),
+  ROUTES.BOOKING_UPDATE_PAYMENT(''),
 ];
 
 /**
  * Constantes para los endpoints de la API
  */
 export const PROPERTIES_ENDPOINT = '/properties';
+export const BOOKINGS_ENDPOINT = '/bookings';

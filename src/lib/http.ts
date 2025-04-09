@@ -157,6 +157,10 @@ export const http: HttpClient = {
     return this.request<T>(endpoint, { ...options, method: 'PUT', body });
   },
 
+  async patch<T>(endpoint: string, body?: unknown, options?: Omit<RequestOptions, 'method' | 'body'>): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { ...options, method: 'PATCH', body });
+  },
+
   async delete<T>(endpoint: string, options?: Omit<RequestOptions, 'method'>): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
   },
