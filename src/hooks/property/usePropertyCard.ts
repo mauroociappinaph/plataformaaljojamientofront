@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Property, PropertyCardConfig } from '@/types/property.types';
 import { ROUTES } from '@/constants/routes';
 import { useFormatPrice, useTruncateText } from '@/hooks';
+import { usePropertyStore } from '@/store/property.store';
 
 interface UsePropertyCardProps {
   /**
@@ -53,6 +54,21 @@ interface UsePropertyCardReturn {
    * Descripción truncada
    */
   truncatedDescription: string;
+
+  /**
+   * Si esta propiedad está en favoritos
+   */
+  isFavorite: boolean;
+
+  /**
+   * Función para alternar el estado de favorito
+   */
+  toggleFavorite: () => void;
+
+  /**
+   * Función para seleccionar esta propiedad
+   */
+  selectProperty: () => void;
 }
 
 /**
@@ -64,6 +80,26 @@ export function usePropertyCard({
 }: UsePropertyCardProps): UsePropertyCardReturn {
   // Estado para manejar el hover
   const [isHovered, setIsHovered] = useState(false);
+
+  // Obtener funcionalidades de favoritos del store
+  const {
+    isFavorite: checkIsFavorite,
+    toggleFavorite: toggleFavoriteInStore,
+    setSelectedPropertyId
+  } = usePropertyStore();
+
+  // Verificar si esta propiedad es favorita
+  const isFavorite = checkIsFavorite(property.id);
+
+  // Función para alternar el estado de favorito
+  const toggleFavorite = () => {
+    toggleFavoriteInStore(property.id);
+  };
+
+  // Función para seleccionar esta propiedad
+  const selectProperty = () => {
+    setSelectedPropertyId(property.id);
+  };
 
   // Determinar el enlace de la propiedad
   const propertyLink = gridConfig?.linkTo || ROUTES.PROPERTY_DETAIL(property.id);
@@ -93,6 +129,9 @@ export function usePropertyCard({
     isSmallCard,
     hideDescription,
     formattedPrice,
-    truncatedDescription
+    truncatedDescription,
+    isFavorite,
+    toggleFavorite,
+    selectProperty
   };
 }

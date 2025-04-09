@@ -113,6 +113,14 @@ export interface PropertyFilters {
   amenities?: string[];
   page?: number;
   limit?: number;
+  location?: string;
+  priceMin?: number;
+  priceMax?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  guests?: number;
+
+
 }
 
 /**
@@ -177,9 +185,18 @@ export interface PropertyListProps {
   favorites?: string[];
   isLoading?: boolean;
   emptyMessage?: string;
+  useStoreProperties?: boolean;
+  hasProperties?: boolean;
+  showLoadingState?: boolean;
+  showEmptyState?: boolean;
+
   gridConfig?: import('@/hooks/property/usePropertyGrid').PropertyGridConfig;
   renderLoadingSkeleton?: () => React.ReactNode;
   renderEmptyState?: (message: string) => React.ReactNode;
+  filters: PropertyFilters;
+  setFilters: (filters: Partial<PropertyFilters>) => void;
+  resetFilters: () => void;
+
 }
 
 /**
