@@ -59,11 +59,14 @@ export const useNavbar = () => {
     // Verificar la posición inicial al montar
     handleScroll();
 
+    // Capturamos la referencia dentro del efecto
+    const timeoutRefCurrent = scrollTimeout;
+
     // Limpiamos al desmontar
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+      if (timeoutRefCurrent.current) {
+        clearTimeout(timeoutRefCurrent.current);
       }
     };
   }, [handleScroll]);
