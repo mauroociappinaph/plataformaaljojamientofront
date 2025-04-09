@@ -1,3 +1,4 @@
+import  { AxiosResponse } from 'axios';
 /**
  * Tipos para el cliente HTTP
  */
@@ -69,7 +70,7 @@ export interface ApiResponse<T> {
 /**
  * Cliente HTTP
  */
-export interface HttpClient {
+ interface HttpClient {
   /**
    * Realiza una petición HTTP genérica
    */
@@ -112,4 +113,41 @@ export interface HttpClient {
    * Realiza una petición DELETE
    */
   delete<T>(endpoint: string, options?: Omit<RequestOptions, 'method'>): Promise<ApiResponse<T>>;
+}
+
+
+export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'> {
+  _prepareHeaders(headers: Record<string, string>, withAuth: boolean): Record<string, string>;
+  _executeWithRetry<T>(
+    endpoint: string,
+    method: HttpMethod,
+    headers: Record<string, string>,
+    body: unknown | undefined,
+    timeout: number,
+    retriesLeft: number
+  ): Promise<ApiResponse<T>>;
+  _executeRequest<T>(
+    endpoint: string,
+    method: HttpMethod,
+    headers: Record<string, string>,
+    body: unknown | undefined,
+    signal: AbortSignal
+  ): Promise<AxiosResponse<T>>;
+  _processResponse<T>(response: AxiosResponse<T>): ApiResponse<T>;
+  _handleRetry<T>(
+    error: unknown,
+    retryCallback: () => Promise<ApiResponse<T>>,
+    retriesLeft: number
+  ): Promise<ApiResponse<T>>;
+  _isRetryableError(error: unknown): boolean;
+  _waitForRetry(retriesLeft: number): Promise<void>;
+  _handleError(error: unknown): ApiResponse<never>;
+  _logRequest(method: string, url: string, headers: Record<string, string>, body: unknown): void;
+  _logResponse(response: AxiosResponse): void;
+}
+
+
+export interface ErrorResponse {
+  message?: string;
+  code?: string;
 }
