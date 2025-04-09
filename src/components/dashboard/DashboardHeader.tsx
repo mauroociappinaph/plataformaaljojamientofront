@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { Menu, Bell, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
@@ -120,7 +121,13 @@ export default function DashboardHeader({ toggleSidebar }: DashboardHeaderProps)
         >
           <div className="h-8 w-8 rounded-full bg-vacacional-salvia/20 flex items-center justify-center">
             {user?.avatar ? (
-              <img src={user.avatar} alt={user.name} className="h-full w-full object-cover rounded-full" />
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={32}
+                height={32}
+                className="h-full w-full object-cover rounded-full"
+              />
             ) : (
               <span className="text-xs font-medium text-vacacional-salvia">
                 {user?.name?.substring(0, 2).toUpperCase() || 'U'}

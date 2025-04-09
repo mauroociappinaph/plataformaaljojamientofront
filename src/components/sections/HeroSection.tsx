@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import { Search, MapPin, Calendar, Users, Award, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from "../ui/Button/Button";
@@ -105,9 +106,9 @@ export function HeroSection() {
 
             <div className="mt-4 text-center">
               <motion.div variants={itemAnimation}>
-                <a href="/properties" className="text-white underline hover:text-vacacional-crema transition-colors">
+                <Link href="/properties" className="text-white underline hover:text-vacacional-crema transition-colors">
                   Ver todas las propiedades
-                </a>
+                </Link>
               </motion.div>
             </div>
           </motion.div>

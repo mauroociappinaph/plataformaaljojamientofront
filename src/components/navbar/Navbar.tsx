@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, Menu, Globe, User } from "lucide-react";
 import Button from "../ui/Button/Button";
@@ -8,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
 export function Navbar() {
-  const { isScrolled, isAtTop, showMenu, toggleMenu } = useNavbar();
+  const { isNavbarScrolled: isScrolled, isAtTop, showMobileMenu: showMenu, toggleMobileMenu: toggleMenu } = useNavbar();
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -198,9 +199,11 @@ export function Navbar() {
               >
                 <Menu className={`h-4 w-4 ${useTransparentBg ? 'text-white' : ''}`} />
                 {isAuthenticated && user?.avatar ? (
-                  <img
+                  <Image
                     src={user.avatar}
                     alt={user.name}
+                    width={24}
+                    height={24}
                     className="h-6 w-6 rounded-full object-cover"
                   />
                 ) : (
@@ -251,11 +254,11 @@ export function Navbar() {
                     ) : (
                       // Menú para usuarios no logueados
                       <>
-                        <Link href="/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
-                          Registrate
-                        </Link>
-                        <Link href="/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                        <Link href="/auth/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
                           Iniciar sesión
+                        </Link>
+                        <Link href="/auth/register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
+                          Registrarse
                         </Link>
                         <Link href="/properties" className="block px-4 py-2 text-sm text-gray-700 hover:bg-vacacional-crema/20 transition-colors duration-150">
                           Ver propiedades

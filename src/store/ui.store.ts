@@ -1,4 +1,5 @@
-import { create } from 'zustand';
+import { createWithEqualityFn } from 'zustand/traditional';
+import { shallow } from 'zustand/shallow';
 
 /**
  * Interfaz para el estado y acciones de la UI global
@@ -28,8 +29,9 @@ interface UIState {
 /**
  * Store para gestionar estados de UI compartidos entre componentes
  * No usamos persist porque estos estados no necesitan guardarse entre sesiones
+ * Usamos createWithEqualityFn para mejor compatibilidad con SSR
  */
-export const useUIStore = create<UIState>()((set) => ({
+export const useUIStore = createWithEqualityFn<UIState>()((set) => ({
   // Estado inicial de navegación
   isNavbarScrolled: false,
   isAtTop: true,
@@ -49,4 +51,4 @@ export const useUIStore = create<UIState>()((set) => ({
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setGuests: (guests) => set({ guests }),
   toggleMobileSearch: () => set((state) => ({ showMobileSearch: !state.showMobileSearch })),
-}));
+}), shallow);

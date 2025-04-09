@@ -3,6 +3,21 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { Property, PropertyFilters } from '@/types/property.types';
 
 /**
+ * Filtros iniciales por defecto
+ */
+const DEFAULT_FILTERS: PropertyFilters = {
+  location: '',
+  priceMin: 0,
+  priceMax: 5000,
+  bedrooms: 0,
+  bathrooms: 0,
+  guests: 0,
+  categoryId: undefined,
+  page: 1,
+  limit: 9
+};
+
+/**
  * Interfaz que define el estado y las acciones para el store de propiedades
  */
 interface PropertyState {
@@ -33,21 +48,6 @@ interface PropertyState {
   removeFavorite: (propertyId: string) => void;
   isFavorite: (propertyId: string) => boolean;
 }
-
-/**
- * Filtros iniciales por defecto
- */
-const DEFAULT_FILTERS: PropertyFilters = {
-  location: '',
-  priceMin: 0,
-  priceMax: 5000,
-  bedrooms: 0,
-  bathrooms: 0,
-  guests: 0,
-  categoryId: undefined,
-  page: 1,
-  limit: 9
-};
 
 /**
  * Store para gestionar el estado de las propiedades
@@ -118,12 +118,23 @@ export const usePropertyStore = create<PropertyState>()(
     }),
     {
       name: 'property-storage', // Nombre para localStorage
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => {
+        // Verificar que estamos en el cliente
+        return typeof window !== 'undefined'
+          ? localStorage
+          : {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {}
+            };
+      }),
       partialize: (state) => ({
         // Solo persistimos estos valores
         favoriteIds: state.favoriteIds,
         filters: state.filters
-      })
+      }),
+      // Aseguramos que la hidratación ocurra solo en el cliente
+      skipHydration: typeof window === 'undefined'
     }
   )
 );

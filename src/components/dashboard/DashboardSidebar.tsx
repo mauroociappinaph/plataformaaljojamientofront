@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,7 +26,13 @@ export default function DashboardSidebar() {
         <div className="flex items-center mt-4">
           <div className="h-10 w-10 rounded-full bg-vacacional-salvia/20 flex items-center justify-center overflow-hidden">
             {user?.avatar ? (
-              <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={40}
+                height={40}
+                className="h-full w-full object-cover"
+              />
             ) : (
               <User className="h-6 w-6 text-vacacional-salvia" />
             )}

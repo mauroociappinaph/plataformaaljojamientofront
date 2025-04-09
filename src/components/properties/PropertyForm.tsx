@@ -33,7 +33,7 @@ export function PropertyForm({ propertyId, initialData, onSuccess }: PropertyFor
   useEffect(() => {
     // Cargar categorías al montar el componente
     loadCategories();
-  }, []);
+  }, [loadCategories]);
 
   return (
     <form onSubmit={form.handleSubmit} className="space-y-8">
