@@ -1,8 +1,39 @@
 export class HttpError extends Error {
-const ERROR_MESSAGES = {
+
+
+    static ERROR_MESSAGES: Record<string, string> = {
   TIMEOUT: 'La solicitud ha excedido el tiempo de espera',
   NETWORK: 'Error de conexión con el servidor',
   UNKNOWN: 'Error desconocido',
   ABORTED: 'La solicitud fue cancelada por timeout',
 };
 }
+
+export class HttpTimeoutError extends HttpError {
+  constructor(message = HttpError.ERROR_MESSAGES.TIMEOUT) {
+    super(message);
+    this.name = 'HttpTimeoutError';
+  }
+}
+
+export class HttpNetworkError extends HttpError {
+  constructor(message = HttpError.ERROR_MESSAGES.NETWORK) {
+    super(message);
+    this.name = 'HttpNetworkError';
+  }
+}
+
+export class HttpUnknownError extends HttpError {
+  constructor(message = HttpError.ERROR_MESSAGES.UNKNOWN) {
+    super(message);
+    this.name = 'HttpUnknownError';
+  }
+}
+
+export class HttpAbortedError extends HttpError {
+  constructor(message = HttpError.ERROR_MESSAGES.ABORTED) {
+    super(message);
+    this.name = 'HttpAbortedError';
+  }
+}
+

@@ -9,12 +9,6 @@ const DEFAULT_RETRIES = 0;
 
 
 
-
-
-
-// Implementación interna que extiende la interfaz pública
-
-
 export const http: HttpImplementation = {
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
     const {
