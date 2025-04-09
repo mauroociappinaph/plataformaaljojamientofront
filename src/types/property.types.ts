@@ -1,0 +1,230 @@
+/**
+ * Tipos para las propiedades
+ */
+
+/**
+ * Interfaz para el modelo de Propiedad
+ */
+export interface Property {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  location: string;
+  amenities: string[];
+  images: string[];
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
+  address: string;
+  bathrooms: number;
+  bedrooms: number;
+  categoryId: string;
+  city: string;
+  country: string;
+  maxGuests: number;
+  rating: number;
+  category?: Category;
+  owner?: PropertyOwner;
+}
+
+/**
+ * Interfaz para la categoría de la propiedad
+ */
+export interface Category {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Datos del propietario mostrados en la propiedad
+ */
+export interface PropertyOwner {
+  id: string;
+  name: string;
+  email?: string;
+  avatar: string | null;
+}
+
+/**
+ * Interfaz para la creación de una propiedad
+ */
+export interface CreatePropertyDTO {
+  title: string;
+  description: string;
+  price: number;
+  location: string;
+  address: string;
+  city: string;
+  country: string;
+  amenities: string[];
+  images?: string[];
+  bathrooms: number;
+  bedrooms: number;
+  maxGuests: number;
+  categoryId: string;
+}
+
+/**
+ * Interfaz para la actualización de una propiedad (todos los campos son opcionales)
+ */
+export interface UpdatePropertyDTO {
+  title?: string;
+  description?: string;
+  price?: number;
+  location?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  amenities?: string[];
+  images?: string[];
+  bathrooms?: number;
+  bedrooms?: number;
+  maxGuests?: number;
+  categoryId?: string;
+}
+
+
+/**
+ * Interfaz para las propiedades de la página de edición
+ */
+export interface EditPropertyPageProps {
+  params: {
+    id: string;
+  };
+}
+
+/**
+ * Interfaz para filtrar propiedades
+ */
+export interface PropertyFilters {
+  search?: string;
+  city?: string;
+  country?: string;
+  categoryId?: string;
+  minGuests?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  minBedrooms?: number;
+  minBathrooms?: number;
+  amenities?: string[];
+  page?: number;
+  limit?: number;
+  location?: string;
+  priceMin?: number;
+  priceMax?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  guests?: number;
+
+
+}
+
+/**
+ * Respuesta paginada de propiedades
+ */
+export interface PaginatedPropertyResponse {
+  data: Property[];
+  total: number;
+}
+
+/**
+ * Configuración de la tarjeta de propiedad
+ */
+export interface PropertyCardConfig {
+  /**
+   * Ruta personalizada para el enlace
+   */
+  linkTo?: string;
+
+  /**
+   * Tamaño del card (normal o pequeño)
+   */
+  cardSize?: 'normal' | 'sm' | 'lg';
+
+  /**
+   * Si se debe ocultar la descripción
+   */
+  hideDescription?: boolean;
+}
+
+/**
+ * Props para el componente PropertyCard
+ */
+export interface PropertyCardProps {
+  /**
+   * Datos de la propiedad a mostrar
+   */
+  property: Property;
+
+  /**
+   * Función para notificar cambio en estado de favorito
+   */
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+
+  /**
+   * Estado inicial de favorito
+   */
+  isFavorite?: boolean;
+
+  /**
+   * Configuración del grid para esta tarjeta
+   */
+  gridConfig?: PropertyCardConfig;
+}
+
+/**
+ * Props para el componente PropertyList
+ */
+export interface PropertyListProps {
+  properties: Property[];
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+  favorites?: string[];
+  isLoading?: boolean;
+  emptyMessage?: string;
+  useStoreProperties?: boolean;
+  hasProperties?: boolean;
+  showLoadingState?: boolean;
+  showEmptyState?: boolean;
+
+  gridConfig?: import('@/hooks/property/usePropertyGrid').PropertyGridConfig;
+  renderLoadingSkeleton?: () => React.ReactNode;
+  renderEmptyState?: (message: string) => React.ReactNode;
+  filters: PropertyFilters;
+  setFilters: (filters: Partial<PropertyFilters>) => void;
+  resetFilters: () => void;
+
+}
+
+/**
+ * Props para el componente PropertyDetail
+ */
+export interface PropertyDetailProps {
+  /**
+   * ID de la propiedad a mostrar
+   */
+  propertyId: string;
+
+  /**
+   * Datos iniciales de la propiedad (opcional, para SSR)
+   */
+  initialData?: Property | null;
+
+  /**
+   * Indicador de si la propiedad es favorita
+   */
+  isFavorite?: boolean;
+
+  /**
+   * Función para manejar agregar/quitar de favoritos
+   */
+  onFavoriteToggle?: (propertyId: string, isFavorite: boolean) => void;
+
+  /**
+   * Índice inicial de la imagen a mostrar
+   */
+  initialImageIndex?: number;
+}

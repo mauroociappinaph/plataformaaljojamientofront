@@ -104,6 +104,11 @@ export interface HttpClient {
   put<T>(endpoint: string, body?: unknown, options?: Omit<RequestOptions, 'method' | 'body'>): Promise<ApiResponse<T>>;
 
   /**
+   * Realiza una petición PATCH
+   */
+  patch<T>(endpoint: string, body?: unknown, options?: Omit<RequestOptions, 'method' | 'body'>): Promise<ApiResponse<T>>;
+
+  /**
    * Realiza una petición DELETE
    */
   delete<T>(endpoint: string, options?: Omit<RequestOptions, 'method'>): Promise<ApiResponse<T>>;

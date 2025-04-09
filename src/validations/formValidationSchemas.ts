@@ -13,8 +13,13 @@ import { validatePasswordForYup } from '@/utils/passwordUtils';
 // Validación reutilizable para el campo de email
 const emailValidation = yup
   .string()
-  .email('Email inválido')
-  .required('El email es obligatorio');
+  .trim()
+  .required('El email es obligatorio')
+  .matches(
+    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+    'Por favor, ingresa un email válido (ejemplo@dominio.com)'
+  )
+  .email('El formato del email no es válido');
 
 // Validación reutilizable para el campo de contraseña
 const passwordValidation = yup

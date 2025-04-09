@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/store/auth.store';
 import { LoginDTO, RegisterDTO, User } from '@/types/auth.types';
-import { login as apiLogin, register as apiRegister, logout as apiLogout, verifyToken as apiVerifyToken } from '@/lib/api/auth';
+import { login as apiLogin, register as apiRegister, logout as apiLogout, verifyToken as apiVerifyToken } from '@/lib/api';
 import { useCallback } from 'react';
 
 /**
@@ -82,13 +82,15 @@ export const useAuth = () => {
    */
   const logout = useCallback(async () => {
     try {
-      // Intentamos hacer logout en el backend
+      // Limpiamos el estado local antes de intentar el logout en el servidor
+      // para asegurar que la UI se actualice incluso si falla la petición
+      storeLogout();
+
+      // Intentamos hacer logout en el backend (ahora opcional)
       await apiLogout();
     } catch (error) {
-      console.error('Error al cerrar sesión en el servidor:', error);
-    } finally {
-      // Siempre limpiamos el estado local, incluso si falla el logout en el servidor
-      storeLogout();
+      // Solo registramos el error para diagnóstico, la sesión ya se cerró localmente
+      console.warn('Error al cerrar sesión en el servidor:', error);
     }
   }, [storeLogout]);
 

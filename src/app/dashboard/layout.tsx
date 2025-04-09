@@ -1,6 +1,7 @@
 'use client';
 
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ReactNode } from 'react';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 
 /**
  * Layout para las páginas del dashboard que requieren autenticación
@@ -9,16 +10,22 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen flex flex-col">
-        {/* Aquí puedes agregar componentes específicos del dashboard como navbar, sidebar, etc. */}
-        <div className="flex-1 p-4">
-          {children}
-        </div>
+    <div className="flex flex-col min-h-screen md:flex-row bg-gray-50">
+      {/* Sidebar de navegación */}
+      <DashboardSidebar />
+
+      {/* Contenido principal */}
+      <div className="flex-1 p-4 md:p-6 xl:p-8 overflow-auto">
+        {children}
+
+        {/* Footer */}
+        <footer className="mt-auto pt-8 text-center text-sm text-gray-500">
+          <p>© 2025 Alojamientos Vacacionales. Todos los derechos reservados.</p>
+        </footer>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

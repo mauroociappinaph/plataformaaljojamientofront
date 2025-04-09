@@ -20,6 +20,21 @@ export interface RegisterDTO {
 }
 
 /**
+ * Datos para solicitud de recuperación de contraseña
+ */
+export interface ForgotPasswordDTO {
+  email: string;
+}
+
+/**
+ * Datos para restablecer contraseña
+ */
+export interface ResetPasswordDTO {
+  token: string;
+  password: string;
+}
+
+/**
  * Información del usuario autenticado
  */
 export interface User {
@@ -48,6 +63,13 @@ export enum UserRole {
 export interface AuthResponse {
   access_token: string;
   user?: User;
+}
+
+/**
+ * Respuesta del servidor para recuperación de contraseña
+ */
+export interface PasswordResetResponse {
+  message: string;
 }
 
 /**

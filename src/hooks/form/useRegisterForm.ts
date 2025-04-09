@@ -6,6 +6,7 @@ import { calculatePasswordStrength } from '@/utils/passwordUtils';
 import { registerSchema } from '@/validations/formValidationSchemas';
 import { useForm } from './useForm';
 import { useDoublePasswordVisibility } from './usePasswordVisibility';
+import { ROUTES } from '@/constants/routes';
 
 /**
  * Hook personalizado para manejar el formulario de registro
@@ -36,7 +37,7 @@ export function useRegisterForm() {
 
       // Redireccionar si el registro fue exitoso
       if (success) {
-        router.push('/dashboard');
+        router.push(ROUTES.DASHBOARD);
       }
 
       return success;

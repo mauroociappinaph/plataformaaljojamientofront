@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthInitializer from "@/components/auth/AuthInitializer";
+import { Navbar } from "@/components/navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,8 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <AuthInitializer />
-        <main className="min-h-screen bg-background">
+        <Navbar />
+        <main className="min-h-screen bg-background pt-20">
           {children}
         </main>
       </body>
