@@ -31,9 +31,9 @@ export function Navbar() {
   return (
     <motion.header
       className={`fixed top-0 left-0 right-0 w-full z-50 will-change-transform transition-colors duration-300 ${
-        useTransparentBg ? 'bg-transparent' : 'bg-white'
+        useTransparentBg ? 'bg-transparent' : 'bg-white shadow-sm'
       }`}
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: 0, opacity: 1 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
     >

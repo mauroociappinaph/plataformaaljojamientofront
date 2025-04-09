@@ -87,6 +87,16 @@ export interface UpdatePropertyDTO {
   categoryId?: string;
 }
 
+
+/**
+ * Interfaz para las propiedades de la página de edición
+ */
+export interface EditPropertyPageProps {
+  params: {
+    id: string;
+  };
+}
+
 /**
  * Interfaz para filtrar propiedades
  */

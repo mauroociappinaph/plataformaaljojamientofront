@@ -8,22 +8,14 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Button from '@/components/ui/Button/Button';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { Booking } from '../../types/bookingCalender.types';
 
 // Configuramos el localizador de momentjs para react-big-calendar
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
 // Interfaces
-interface Booking {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  propertyId?: string;
-  propertyName?: string;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  color?: string;
-}
+
 
 // Componente
 export default function BookingCalendar() {

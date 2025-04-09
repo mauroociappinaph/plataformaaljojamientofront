@@ -10,9 +10,22 @@ import { http } from '@/lib/http';
  */
 export const login = async (credentials: LoginDTO): Promise<AuthResponse> => {
   try {
+    // Validaciones básicas del lado del cliente
+    if (!credentials.email || !credentials.email.includes('@')) {
+      throw new Error('Por favor, ingresa un email válido');
+    }
+
+    if (!credentials.password || credentials.password.length < 6) {
+      throw new Error('La contraseña debe tener al menos 6 caracteres');
+    }
+
     const { data, error } = await http.post<AuthResponse>('/auth/login', credentials);
 
     if (error) {
+      // Mejorar mensajes de error específicos
+      if (error.includes('inválidas') || error.includes('invalid')) {
+        throw new Error('Email o contraseña incorrectos. Verifica tus credenciales e intenta nuevamente.');
+      }
       throw new Error(error);
     }
 
@@ -42,9 +55,18 @@ export const login = async (credentials: LoginDTO): Promise<AuthResponse> => {
  */
 export const register = async (userData: RegisterDTO): Promise<User> => {
   try {
+    // Validar el formato del email antes de hacer la petición
+    if (!userData.email || !userData.email.includes('@')) {
+      throw new Error('Por favor, ingresa un email válido');
+    }
+
     const { data, error } = await http.post<User>('/auth/register', userData);
 
     if (error) {
+      // Manejar errores específicos
+      if (error.includes('email')) {
+        throw new Error('El formato del email no es válido o ya está registrado');
+      }
       throw new Error(error);
     }
 
@@ -128,20 +150,20 @@ export const logout = async (): Promise<{ message: string }> => {
     // Limpiar token del localStorage
     localStorage.removeItem('token');
 
-    // Si la gestión de sesión es con cookies en el servidor
-    const { data, error } = await http.post<{ message: string }>('/auth/logout');
+    // Opcional: Si la gestión de sesión es con cookies en el servidor
+    // Descomentar si el backend implementa esta funcionalidad
+    // const { data, error } = await http.post<{ message: string }>('/auth/logout');
+    // if (error) {
+    //   console.warn('Error al cerrar sesión en el servidor:', error);
+    // }
 
-    if (error) {
-      throw new Error(error);
-    }
-
-    return data || { message: 'Sesión cerrada correctamente' };
+    return { message: 'Sesión cerrada correctamente' };
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error en servicio de logout:', error.message);
     }
 
-    // Incluso si hay un error en el servidor, consideramos el logout como exitoso
+    // Incluso si hay un error, consideramos el logout como exitoso
     // ya que eliminamos el token del cliente
     return { message: 'Sesión cerrada localmente' };
   }

@@ -38,7 +38,7 @@ export function HeroSection() {
           >
             <span className="flex items-center">
               <Award size={16} className="mr-1.5 sm:mr-2 text-amber-400" />
-              Experiencias únicas respaldadas por nuestros usuarios
+              Alojamientos verificados con comentarios auténticos
             </span>
           </motion.div>
 
@@ -46,14 +46,14 @@ export function HeroSection() {
             className="text-3xl sm:text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl mb-4 sm:mb-6"
             variants={itemAnimation}
           >
-            Encuentra el lugar perfecto para tus vacaciones
+            Encuentra el alojamiento perfecto para tus vacaciones
           </motion.h1>
 
           <motion.p
             className="mt-3 text-base sm:text-lg md:text-xl text-white/90"
             variants={itemAnimation}
           >
-            Explora alojamientos únicos en todo el mundo y vive experiencias inolvidables
+            Miles de opciones de alojamiento exclusivas con recomendaciones personalizadas
           </motion.p>
 
           {/* Buscador para pantallas medianas y grandes */}
@@ -66,7 +66,7 @@ export function HeroSection() {
                 <MapPin className="absolute left-3 top-3 text-vacacional-texto" size={18} />
                 <input
                   type="text"
-                  placeholder="¿A dónde quieres ir?"
+                  placeholder="¿Dónde quieres alojarte?"
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-vacacional-salvia"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,6 +102,14 @@ export function HeroSection() {
                 Buscar alojamientos
               </Button>
             </div>
+
+            <div className="mt-4 text-center">
+              <motion.div variants={itemAnimation}>
+                <a href="/properties" className="text-white underline hover:text-vacacional-crema transition-colors">
+                  Ver todas las propiedades
+                </a>
+              </motion.div>
+            </div>
           </motion.div>
 
           {/* Buscador compacto para móviles */}
@@ -112,7 +120,7 @@ export function HeroSection() {
             >
               <div className="flex items-center text-vacacional-texto">
                 <Search size={18} className="mr-2" />
-                <span className="text-sm font-medium">¿Dónde quieres ir?</span>
+                <span className="text-sm font-medium">¿Dónde quieres alojarte?</span>
               </div>
               <ChevronDown
                 size={18}
@@ -135,7 +143,7 @@ export function HeroSection() {
                   <MapPin className="absolute left-3 top-3 text-vacacional-texto" size={18} />
                   <input
                     type="text"
-                    placeholder="¿A dónde quieres ir?"
+                    placeholder="¿Dónde quieres alojarte?"
                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-vacacional-salvia"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

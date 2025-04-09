@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function PropertiesPage() {
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8 pt-32">
       <PageHeader
         title="Propiedades"
         description="Explora nuestras propiedades disponibles"

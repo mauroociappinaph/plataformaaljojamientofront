@@ -6,9 +6,7 @@ import {
   PaginatedPropertyResponse
 } from '@/types/property.types';
 import { http } from '@/lib/http';
-
-// Endpoint base para propiedades
-const PROPERTIES_ENDPOINT = '/properties';
+import { PROPERTIES_ENDPOINT } from '@/constants/routes';
 
 /**
  * Obtiene todas las propiedades con opciones de filtrado y paginación

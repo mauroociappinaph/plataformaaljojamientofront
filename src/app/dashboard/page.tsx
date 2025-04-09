@@ -3,37 +3,42 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Calendar, Building2, CreditCard, Star, TrendingUp, Users, Heart, Key } from "lucide-react";
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
-
-// Interfaces para tipos
-interface StatItem {
-  label: string;
-  value: string;
-  icon: LucideIcon;
-  color: string;
-}
-
-interface ActionItem {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  color: string;
-  description: string;
-}
+import { StatItem, ActionItem } from "../../types/dashboardUser.types";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const [isLocalLoading, setIsLocalLoading] = useState(true);
 
-  if (!user) {
+  // Establecer un tiempo máximo de carga
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLocalLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Si estamos en estado de carga (pero no por demasiado tiempo)
+  if ((isLoading || isLocalLoading) && user === null) {
     return (
-      <div className="flex items-center justify-center h-40">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-vacacional-salvia"></div>
+      <div className="flex flex-col items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-vacacional-salvia mb-4"></div>
+        <p className="text-gray-500">Cargando tu dashboard...</p>
       </div>
     );
   }
 
+  // Usar datos de usuario por defecto para desarrollo si no hay usuario
+  const currentUser = user || {
+    id: "dev-user-id",
+    name: "Usuario de Prueba",
+    email: "test@example.com",
+    role: "USER"
+  };
+
   // Roles disponibles y sus respectivas estadísticas
-  const userRole = user.role || 'USER';
+  const userRole = currentUser.role || 'USER';
 
   // Determinar estadísticas y acciones rápidas según rol
   let stats: StatItem[] = [];
@@ -145,7 +150,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Encabezado */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-2xl font-bold mb-2">Bienvenido, {user.name}</h1>
+        <h1 className="text-2xl font-bold mb-2">Bienvenido, {currentUser.name}</h1>
         <p className="text-gray-600">Accede a la gestión de tu cuenta y administra tus {userRole === 'HOST' ? 'propiedades' : 'reservas'}</p>
       </div>
 

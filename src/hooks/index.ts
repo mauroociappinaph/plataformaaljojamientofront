@@ -7,3 +7,4 @@ export { useAuth } from './useAuth';
 export { useNavbar } from './useNavbar';
 export { useHeroSection } from './useHeroSection';
 export { useVerifyEmail } from './useVerifyEmail';
+export * from './useToast';

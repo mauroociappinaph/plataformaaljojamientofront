@@ -1,9 +1,7 @@
 'use client';
 
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { useState, useEffect } from "react";
+import { ReactNode } from 'react';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 
 /**
  * Layout para las páginas del dashboard que requieren autenticación
@@ -12,67 +10,22 @@ import { useState, useEffect } from "react";
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  const [showSidebar, setShowSidebar] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detectar tamaño de pantalla para responsive
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 1024);
-      setShowSidebar(window.innerWidth >= 1024);
-    };
-
-    // Comprobar al montar el componente
-    checkScreenSize();
-
-    // Actualizar cuando cambie el tamaño de la ventana
-    window.addEventListener('resize', checkScreenSize);
-
-    // Limpiar cuando se desmonte
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
-  };
-
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen flex flex-col">
-        {/* Layout principal */}
-        <div className="flex flex-1">
-          {/* Sidebar condicional */}
-          {showSidebar && (
-            <div className={`${isMobile ? 'fixed z-40 h-full' : 'relative'}`}>
-              <DashboardSidebar />
+    <div className="flex flex-col min-h-screen md:flex-row bg-gray-50">
+      {/* Sidebar de navegación */}
+      <DashboardSidebar />
 
-              {/* Overlay para cerrar sidebar en móvil */}
-              {isMobile && (
-                <div
-                  className="fixed inset-0 bg-black/30 z-30"
-                  onClick={() => setShowSidebar(false)}
-                ></div>
-              )}
-            </div>
-          )}
+      {/* Contenido principal */}
+      <div className="flex-1 p-4 md:p-6 xl:p-8 overflow-auto">
+        {children}
 
-          {/* Contenido principal */}
-          <div className="flex-1 flex flex-col">
-            <DashboardHeader toggleSidebar={toggleSidebar} />
-
-            <main className="flex-1 bg-gray-50 p-4 md:p-6">
-              {children}
-            </main>
-
-            {/* Footer */}
-            <footer className="bg-white border-t border-gray-200 py-4 px-6 text-center text-sm text-gray-500">
-              <p>© {new Date().getFullYear()} Alojamientos Vacacionales. Todos los derechos reservados.</p>
-            </footer>
-          </div>
-        </div>
+        {/* Footer */}
+        <footer className="mt-auto pt-8 text-center text-sm text-gray-500">
+          <p>© 2025 Alojamientos Vacacionales. Todos los derechos reservados.</p>
+        </footer>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }
