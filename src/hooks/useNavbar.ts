@@ -1,29 +1,45 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { UseNavbarReturn } from '@/types/navbar.types';
+import { useEffect, useCallback, useRef } from 'react';
+import { useUIStore } from '@/store/ui.store';
 
-export const useNavbar = (): UseNavbarReturn => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isAtTop, setIsAtTop] = useState(true); // Estado para saber si estamos al inicio de la página
-  const [showMenu, setShowMenu] = useState(false);
+/**
+ * Hook para manejar la funcionalidad de la barra de navegación
+ * Refactorizado para usar el store de UI global
+ */
+export const useNavbar = () => {
+  // Accedemos al estado y acciones del store de UI
+  const {
+    isNavbarScrolled,
+    isAtTop,
+    showMobileMenu,
+    setNavbarScrolled,
+    setIsAtTop,
+    toggleMobileMenu
+  } = useUIStore();
+
+  // Referencias para seguimiento de scroll y debounce
   const prevScrollY = useRef(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Optimizamos la detección de scroll usando debounce para mejor rendimiento
+  /**
+   * Maneja el evento de scroll y actualiza el estado del navbar
+   */
   const handleScroll = useCallback(() => {
     // Cancelamos el timeout anterior si existe
     if (scrollTimeout.current) {
       clearTimeout(scrollTimeout.current);
     }
 
-    // Usamos RAF para sincronizar con el ciclo de renderizado
+    // Usamos requestAnimationFrame para sincronizar con el ciclo de renderizado
     requestAnimationFrame(() => {
       const currentScrollY = window.scrollY;
-      // Solo actualizamos si hubo un cambio significativo y el estado debe cambiar
+
+      // Calculamos los nuevos estados
       const shouldBeScrolled = currentScrollY > 20;
       const shouldBeAtTop = currentScrollY < 10;
 
-      if (isScrolled !== shouldBeScrolled) {
-        setIsScrolled(shouldBeScrolled);
+      // Solo actualizamos si hubo un cambio significativo
+      if (isNavbarScrolled !== shouldBeScrolled) {
+        setNavbarScrolled(shouldBeScrolled);
       }
 
       if (isAtTop !== shouldBeAtTop) {
@@ -32,13 +48,18 @@ export const useNavbar = (): UseNavbarReturn => {
 
       prevScrollY.current = currentScrollY;
     });
-  }, [isScrolled, isAtTop]);
+  }, [isNavbarScrolled, isAtTop, setNavbarScrolled, setIsAtTop]);
 
+  /**
+   * Configuramos el listener de scroll y hacemos la verificación inicial
+   */
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     // Verificar la posición inicial al montar
     handleScroll();
 
+    // Limpiamos al desmontar
     return () => {
       window.removeEventListener("scroll", handleScroll);
       if (scrollTimeout.current) {
@@ -47,14 +68,14 @@ export const useNavbar = (): UseNavbarReturn => {
     };
   }, [handleScroll]);
 
-  const toggleMenu = useCallback(() => {
-    setShowMenu(prev => !prev);
-  }, []);
-
+  /**
+   * Retornamos los valores y funciones necesarias para el componente
+   * Mantenemos los mismos nombres de propiedades para compatibilidad con el código existente
+   */
   return {
-    isScrolled,
+    isScrolled: isNavbarScrolled,
     isAtTop,
-    showMenu,
-    toggleMenu,
+    showMenu: showMobileMenu,
+    toggleMenu: toggleMobileMenu,
   };
 };

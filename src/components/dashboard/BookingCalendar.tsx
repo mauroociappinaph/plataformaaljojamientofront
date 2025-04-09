@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { Calendar, momentLocalizer, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/es'; // Importamos la localización en español
@@ -8,102 +7,27 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Button from '@/components/ui/Button/Button';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Booking } from '../../types/bookingCalender.types';
+import { useBookingCalendar } from '@/hooks/booking/useBookingCalendar';
 
 // Configuramos el localizador de momentjs para react-big-calendar
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
-// Interfaces
-
-
 // Componente
 export default function BookingCalendar() {
-  // Estado para almacenar las reservas
-  const [bookings] = useState<Booking[]>([
-    // Datos de ejemplo para visualización
-    {
-      id: '1',
-      title: 'Apartamento en Barcelona',
-      start: new Date(2024, 5, 15),
-      end: new Date(2024, 5, 20),
-      propertyId: 'prop-1',
-      propertyName: 'Apartamento Céntrico en Barcelona',
-      status: 'confirmed',
-      color: '#4CAF50'
-    },
-    {
-      id: '2',
-      title: 'Casa rural en Asturias',
-      start: new Date(2024, 5, 10),
-      end: new Date(2024, 5, 15),
-      propertyId: 'prop-2',
-      propertyName: 'Casa Rural con Vistas a la Montaña',
-      status: 'pending',
-      color: '#FFC107'
-    },
-    {
-      id: '3',
-      title: 'Ático en Valencia',
-      start: new Date(2024, 5, 25),
-      end: new Date(2024, 6, 2),
-      propertyId: 'prop-3',
-      propertyName: 'Ático con Terraza en Valencia',
-      status: 'confirmed',
-      color: '#4CAF50'
-    }
-  ]);
-
-  // Estado para la vista actual del calendario
-  const [view, setView] = useState<View | string>('month');
-
-  // Estado para la fecha actual del calendario
-  const [date, setDate] = useState(new Date());
-
-  // Personalización de eventos en el calendario
-  const eventPropGetter = useCallback((event: Booking) => {
-    let backgroundColor = '#3174ad';
-
-    if (event.status === 'confirmed') {
-      backgroundColor = '#4CAF50'; // Verde para confirmadas
-    } else if (event.status === 'pending') {
-      backgroundColor = '#FFC107'; // Amarillo para pendientes
-    } else if (event.status === 'cancelled') {
-      backgroundColor = '#F44336'; // Rojo para canceladas
-    }
-
-    return {
-      style: {
-        backgroundColor,
-        borderRadius: '4px',
-        opacity: 0.9,
-        color: 'white',
-        border: '0px',
-        display: 'block'
-      }
-    };
-  }, []);
-
-  // Componente para mostrar cuando se hace clic en un evento
-  const eventInfo = useCallback((event: Booking) => {
-    alert(`
-      Reserva: ${event.title}
-      Propiedad: ${event.propertyName}
-      Fecha inicio: ${format(event.start, 'dd/MM/yyyy')}
-      Fecha fin: ${format(event.end, 'dd/MM/yyyy')}
-      Estado: ${event.status}
-    `);
-  }, []);
-
-  // Función para cambiar de vista
-  const handleViewChange = (newView: string) => {
-    setView(newView);
-  };
-
-  // Función para navegar a hoy
-  const handleToday = () => {
-    setDate(new Date());
-  };
+  // Usamos el hook personalizado para manejar toda la lógica
+  const {
+    bookings,
+    view,
+    date,
+    setDate,
+    eventPropGetter,
+    eventInfo,
+    handleViewChange,
+    handleToday,
+    navigateToPreviousMonth,
+    navigateToNextMonth
+  } = useBookingCalendar();
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -124,11 +48,7 @@ export default function BookingCalendar() {
             <Button
               variant="ghost"
               className="p-2"
-              onClick={() => {
-                const newDate = new Date(date);
-                newDate.setMonth(date.getMonth() - 1);
-                setDate(newDate);
-              }}
+              onClick={navigateToPreviousMonth}
             >
               &lt;
             </Button>
@@ -138,11 +58,7 @@ export default function BookingCalendar() {
             <Button
               variant="ghost"
               className="p-2"
-              onClick={() => {
-                const newDate = new Date(date);
-                newDate.setMonth(date.getMonth() + 1);
-                setDate(newDate);
-              }}
+              onClick={navigateToNextMonth}
             >
               &gt;
             </Button>
@@ -189,7 +105,7 @@ export default function BookingCalendar() {
           view={view as View}
           date={date}
           onNavigate={setDate}
-          onView={(view) => setView(view)}
+          onView={(view) => handleViewChange(view)}
           eventPropGetter={eventPropGetter}
           onSelectEvent={eventInfo}
           popup
