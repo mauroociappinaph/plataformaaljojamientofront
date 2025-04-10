@@ -5,7 +5,7 @@ import {
   PropertyFilters,
   PaginatedPropertyResponse
 } from '@/types/property.types';
-import { http } from '@/lib/http';
+import { http } from '@/lib/http/http-index';
 import { PROPERTIES_ENDPOINT } from '@/constants/routes';
 
 /**

@@ -1,4 +1,4 @@
-import { http } from '@/lib/http';
+import { http } from '@/lib/http/http-index';
 import { BOOKINGS_ENDPOINT } from '@/constants/routes';
 import { Booking, BookingStatus, PaymentStatus } from '@/types/booking.types';
 

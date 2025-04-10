@@ -1,5 +1,5 @@
 import { LoginDTO, RegisterDTO, AuthResponse, User, ForgotPasswordDTO, ResetPasswordDTO, PasswordResetResponse } from '@/types/auth.types';
-import { http } from '@/lib/http';
+import { http } from '@/lib/http/http-index';
 
 // Servicios para autenticación de usuarios
 

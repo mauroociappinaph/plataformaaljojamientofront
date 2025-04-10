@@ -1,6 +1,7 @@
 import { ErrorResponse,HttpImplementation, RequestOptions, ApiResponse, HttpMethod } from '@/types/http.types';
 import axios, { AxiosResponse } from 'axios';
-import { HttpError } from './errors/http-errors';
+import { handleError } from './http-helpers';
+
 
 // Configuración constante
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -17,9 +18,9 @@ export const http: HttpImplementation = {
       body,
       withAuth = false,
       timeout = DEFAULT_TIMEOUT,
-      retries = DEFAULT_RETRIES
-    } = options;
+      retries = DEFAULT_RETRIES,
 
+    } = options;
     try {
       const requestHeaders = this._prepareHeaders(headers, withAuth);
       return await this._executeWithRetry<T>(
@@ -31,7 +32,7 @@ export const http: HttpImplementation = {
         retries
       );
     } catch (error) {
-      return this._handleError(error);
+      return handleError(error);
     }
   },
 
@@ -177,41 +178,7 @@ export const http: HttpImplementation = {
     await new Promise(resolve => setTimeout(resolve, delay));
   },
 
-  _handleError(error: unknown): ApiResponse<never> {
-    // Manejo de errores de Axios
-    if (axios.isAxiosError(error)) {
-      return {
-        data: null,
-        error: error.response?.data?.message || error.message,
-        status: error.response?.status || 0,
-      };
-    }
 
-    // Manejo de errores de timeout
-    if (error instanceof Error && error.name === 'AbortError') {
-      return {
-        data: null,
-        error: HttpError.ERROR_MESSAGES.ABORTED,
-        status: 408,
-      };
-    }
-
-    // Manejo de errores genéricos
-    if (error instanceof Error) {
-      return {
-        data: null,
-        error: error.message || HttpError.ERROR_MESSAGES.NETWORK,
-        status: 0,
-      };
-    }
-
-    // Error desconocido
-    return {
-      data: null,
-      error: HttpError.ERROR_MESSAGES.UNKNOWN,
-      status: 0,
-    };
-  },
 
   _logRequest(
     method: string,
@@ -230,5 +197,27 @@ export const http: HttpImplementation = {
       status: response.status,
       data: response.data
     });
-  }
+  },
+
+  _setupInterceptors(): void {
+    // Implementación inicial vacía
+  },
+
+  async _refreshToken(): Promise<string> {
+    // Implementación básica
+    return Promise.resolve('');
+  },
+
+  async _handleRefreshTokenFailure(): Promise<void> {
+    // Implementación básica
+    return Promise.resolve();
+  },
+
+  async initialize(): Promise<void> {
+    // Inicializar cliente
+    this._setupInterceptors();
+    return Promise.resolve();
+  },
+
+
 };

@@ -70,7 +70,7 @@ export interface ApiResponse<T> {
 /**
  * Cliente HTTP
  */
- interface HttpClient {
+export interface HttpClient {
   /**
    * Realiza una petición HTTP genérica
    */
@@ -115,8 +115,33 @@ export interface ApiResponse<T> {
   delete<T>(endpoint: string, options?: Omit<RequestOptions, 'method'>): Promise<ApiResponse<T>>;
 }
 
+/**
+ * Extensión de autenticación para el cliente HTTP
+ */
+export interface HttpHelperExtension {
+  /**
+   * Configura los interceptores para manejar tokens
+   */
+  _setupInterceptors(): void;
 
-export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'> {
+  /**
+   * Refresca el token de autenticación
+   * @returns El nuevo token de autenticación
+   */
+  _refreshToken(): Promise<string>;
+
+  /**
+   * Maneja el fallo al refrescar el token
+   */
+  _handleRefreshTokenFailure(): Promise<void>;
+
+  /**
+   * Inicializa el cliente HTTP
+   */
+  initialize(): Promise<void>;
+}
+
+export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'>, HttpHelperExtension {
   _prepareHeaders(headers: Record<string, string>, withAuth: boolean): Record<string, string>;
   _executeWithRetry<T>(
     endpoint: string,
@@ -141,11 +166,9 @@ export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'> {
   ): Promise<ApiResponse<T>>;
   _isRetryableError(error: unknown): boolean;
   _waitForRetry(retriesLeft: number): Promise<void>;
-  _handleError(error: unknown): ApiResponse<never>;
   _logRequest(method: string, url: string, headers: Record<string, string>, body: unknown): void;
   _logResponse(response: AxiosResponse): void;
 }
-
 
 export interface ErrorResponse {
   message?: string;
