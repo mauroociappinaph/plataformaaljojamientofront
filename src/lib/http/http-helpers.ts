@@ -9,14 +9,87 @@ import {
 } from '@/types/http.types';
 import axios, { isAxiosError, AxiosResponse } from 'axios';
 import { HttpNetworkError, HttpUnknownError, HttpAbortedError, HttpAuthError, HttpTimeoutError, HttpAxiosError } from './http-errors';
-import { API_URL } from './http-config';
+import { API_URL, DebugLevel, debugConfig } from './http-config';
 
+// ===== Sistema de logging avanzado =====
+export const logger = {
+  /**
+   * Registra un mensaje con nivel de error
+   * @param message Mensaje principal
+   * @param data Datos adicionales para incluir en el log
+   */
+  error(message: string, data?: unknown): void {
+    if (debugConfig.level >= DebugLevel.ERROR) {
+      this._log('error', message, data);
+    }
+  },
+
+  /**
+   * Registra un mensaje con nivel de advertencia
+   * @param message Mensaje principal
+   * @param data Datos adicionales para incluir en el log
+   */
+  warn(message: string, data?: unknown): void {
+    if (debugConfig.level >= DebugLevel.WARNING) {
+      this._log('warning', message, data);
+    }
+  },
+
+  /**
+   * Registra un mensaje con nivel de información
+   * @param message Mensaje principal
+   * @param data Datos adicionales para incluir en el log
+   */
+  info(message: string, data?: unknown): void {
+    if (debugConfig.level >= DebugLevel.INFO) {
+      this._log('info', message, data);
+    }
+  },
+
+  /**
+   * Registra un mensaje con nivel de depuración
+   * @param message Mensaje principal
+   * @param data Datos adicionales para incluir en el log
+   */
+  debug(message: string, data?: unknown): void {
+    if (debugConfig.level >= DebugLevel.DEBUG) {
+      this._log('debug', message, data);
+    }
+  },
+
+  /**
+   * Método interno para registrar mensajes con formato
+   */
+  _log(level: 'error' | 'warning' | 'info' | 'debug', message: string, data?: unknown): void {
+    const colorStyle = `color: ${debugConfig.colors[level] || debugConfig.colors.default}; font-weight: bold;`;
+
+    // Formatear el mensaje
+    const timestamp = new Date().toISOString();
+    const prefix = `[HTTP:${level.toUpperCase()}] [${timestamp}]`;
+
+    // Log básico siempre visible
+    console.group(`%c${prefix} ${message}`, colorStyle);
+
+    // Log de datos adicionales
+    if (data !== undefined) {
+      if (debugConfig.prettyPrintJSON && typeof data === 'object') {
+        console.log('%cDatos:', 'font-weight: bold');
+        console.dir(data, { depth: null, colors: true });
+      } else {
+        console.log('%cDatos:', 'font-weight: bold', data);
+      }
+    }
+
+    console.groupEnd();
+  }
+};
 
 // ===== Implementación de HttpErrorHandler =====
 export const errorHandler: HttpErrorHandler = {
   handleError(error: unknown): ApiResponse<never> {
     // 1. Errores de timeout (más específico primero)
     if (error instanceof HttpTimeoutError) {
+      logger.error('Error de timeout', error);
       return {
         data: null,
         error: HttpTimeoutError.ERROR_MESSAGES.TIMEOUT,
@@ -26,6 +99,11 @@ export const errorHandler: HttpErrorHandler = {
 
     // 2. Errores de Axios
     if (isAxiosError(error)) {
+      logger.error('Error de Axios', {
+        status: error.response?.status,
+        message: error.message,
+        response: error.response?.data
+      });
       return {
         data: null,
         error: HttpAxiosError.ERROR_MESSAGES.AXIOS_ERROR,
@@ -34,6 +112,7 @@ export const errorHandler: HttpErrorHandler = {
     }
 
     if (error instanceof HttpAbortedError) {
+      logger.warn('Petición abortada', error);
       return {
         data: null,
         error: HttpAbortedError.ERROR_MESSAGES.ABORTED,
@@ -43,6 +122,7 @@ export const errorHandler: HttpErrorHandler = {
 
     // 3. Errores personalizados de sesión (ej: token expirado)
     if (error instanceof Error && error.message === 'TokenExpired') {
+      logger.warn('Token expirado', error);
       return {
         data: null,
         error: HttpAuthError.ERROR_MESSAGES.SESSION_EXPIRED,
@@ -52,6 +132,7 @@ export const errorHandler: HttpErrorHandler = {
 
     // 4. Errores genéricos
     if (error instanceof Error) {
+      logger.error('Error genérico', error);
       return {
         data: null,
         error: error.message || HttpNetworkError.ERROR_MESSAGES.NETWORK,
@@ -60,6 +141,7 @@ export const errorHandler: HttpErrorHandler = {
     }
 
     // 5. Último recurso: error desconocido
+    logger.error('Error desconocido', error);
     return {
       data: null,
       error: HttpUnknownError.ERROR_MESSAGES.UNKNOWN,
@@ -69,22 +151,35 @@ export const errorHandler: HttpErrorHandler = {
 };
 
 // ===== Implementación de utilidades de logging =====
-
 export function logRequest(
   method: string,
   url: string,
   headers: Record<string, string>,
   body: unknown
 ): void {
-  console.debug(`[HTTP] ${method} ${url}`, {
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
+  if (!debugConfig.logRequests || debugConfig.level < DebugLevel.INFO) return;
+
+  // Ocultar tokens y datos sensibles
+  const safeHeaders = { ...headers };
+  if (safeHeaders.Authorization) {
+    safeHeaders.Authorization = safeHeaders.Authorization.replace(/Bearer .+/, 'Bearer [REDACTED]');
+  }
+
+  logger.info(`${method} ${url}`, {
+    headers: safeHeaders,
+    body: body && debugConfig.prettyPrintJSON ? JSON.parse(JSON.stringify(body)) : body
   });
 }
 
 export function logResponse(response: AxiosResponse): void {
-  console.debug(`[HTTP] Response ${response.status} ${response.config.url}`, {
+  if (!debugConfig.logResponses) return;
+
+  const level = response.status >= 400 ? 'error' : 'info';
+  const logFn = level === 'error' ? logger.error.bind(logger) : logger.info.bind(logger);
+
+  logFn(`Respuesta ${response.status} ${response.config.url}`, {
     status: response.status,
+    headers: response.headers,
     data: response.data
   });
 }
