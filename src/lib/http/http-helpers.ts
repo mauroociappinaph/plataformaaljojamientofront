@@ -9,9 +9,8 @@ import {
 } from '@/types/http.types';
 import axios, { isAxiosError, AxiosResponse } from 'axios';
 import { HttpNetworkError, HttpUnknownError, HttpAbortedError, HttpAuthError, HttpTimeoutError, HttpAxiosError } from './http-errors';
+import { API_URL } from './http-config';
 
-// Configuración constante
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 // ===== Implementación de HttpErrorHandler =====
 export const errorHandler: HttpErrorHandler = {
