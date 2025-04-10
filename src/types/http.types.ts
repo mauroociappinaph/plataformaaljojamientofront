@@ -1,4 +1,4 @@
-import  { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 /**
  * Tipos para el cliente HTTP
  */
@@ -68,26 +68,14 @@ export interface ApiResponse<T> {
 }
 
 /**
- * Cliente HTTP
+ * Cliente HTTP - Interfaz pública
+ * Expone únicamente los métodos que deben ser accesibles para los consumidores
  */
 export interface HttpClient {
   /**
    * Realiza una petición HTTP genérica
    */
   request<T>(endpoint: string, options?: RequestOptions): Promise<ApiResponse<T>>;
-
-  /**
-   * Ejecuta una petición HTTP con soporte para reintentos
-   * @internal Este método es usado internamente por los otros métodos
-   */
-  executeRequest<T>(
-    endpoint: string,
-    method: HttpMethod,
-    headers: Record<string, string>,
-    body: unknown | undefined,
-    signal: AbortSignal,
-    retriesLeft: number
-  ): Promise<ApiResponse<T>>;
 
   /**
    * Realiza una petición GET
@@ -113,12 +101,18 @@ export interface HttpClient {
    * Realiza una petición DELETE
    */
   delete<T>(endpoint: string, options?: Omit<RequestOptions, 'method'>): Promise<ApiResponse<T>>;
+
+  /**
+   * Inicializa el cliente HTTP
+   */
+  initialize(): Promise<void>;
 }
 
 /**
- * Extensión de autenticación para el cliente HTTP
+ * Interfaz para implementaciones de HttpClient
+ * Incluye la autenticación y otros métodos necesarios para implementaciones concretas
  */
-export interface HttpHelperExtension {
+export interface HttpImplementation extends HttpClient {
   /**
    * Configura los interceptores para manejar tokens
    */
@@ -134,16 +128,41 @@ export interface HttpHelperExtension {
    * Maneja el fallo al refrescar el token
    */
   _handleRefreshTokenFailure(): Promise<void>;
-
-  /**
-   * Inicializa el cliente HTTP
-   */
-  initialize(): Promise<void>;
 }
 
-export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'>, HttpHelperExtension {
-  _prepareHeaders(headers: Record<string, string>, withAuth: boolean): Record<string, string>;
-  _executeWithRetry<T>(
+/**
+ * Datos de respuesta de error de la API
+ */
+export interface ErrorResponse {
+  message?: string;
+  code?: string;
+}
+
+/**
+ * @internal Procesa respuestas HTTP
+ */
+export interface HttpResponseProcessor {
+  processResponse<T>(response: AxiosResponse<T>): ApiResponse<T>;
+}
+
+/**
+ * @internal Ejecuta peticiones HTTP
+ */
+export interface HttpRequestExecutor {
+  executeRequest<T>(
+    endpoint: string,
+    method: HttpMethod,
+    headers: Record<string, string>,
+    body: unknown | undefined,
+    signal: AbortSignal
+  ): Promise<AxiosResponse<T>>;
+}
+
+/**
+ * @internal Maneja reintentos de peticiones
+ */
+export interface HttpRetryHandler {
+  executeWithRetry<T>(
     endpoint: string,
     method: HttpMethod,
     headers: Record<string, string>,
@@ -151,26 +170,20 @@ export interface HttpImplementation extends Omit<HttpClient, 'executeRequest'>, 
     timeout: number,
     retriesLeft: number
   ): Promise<ApiResponse<T>>;
-  _executeRequest<T>(
-    endpoint: string,
-    method: HttpMethod,
-    headers: Record<string, string>,
-    body: unknown | undefined,
-    signal: AbortSignal
-  ): Promise<AxiosResponse<T>>;
-  _processResponse<T>(response: AxiosResponse<T>): ApiResponse<T>;
-  _handleRetry<T>(
+
+  handleRetry<T>(
     error: unknown,
     retryCallback: () => Promise<ApiResponse<T>>,
     retriesLeft: number
   ): Promise<ApiResponse<T>>;
-  _isRetryableError(error: unknown): boolean;
-  _waitForRetry(retriesLeft: number): Promise<void>;
-  _logRequest(method: string, url: string, headers: Record<string, string>, body: unknown): void;
-  _logResponse(response: AxiosResponse): void;
+
+  isRetryableError(error: unknown): boolean;
+  waitForRetry(retriesLeft: number): Promise<void>;
 }
 
-export interface ErrorResponse {
-  message?: string;
-  code?: string;
+/**
+ * @internal Maneja errores HTTP
+ */
+export interface HttpErrorHandler {
+  handleError(error: unknown): ApiResponse<never>;
 }

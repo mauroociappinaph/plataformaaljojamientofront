@@ -7,6 +7,7 @@ static ERROR_MESSAGES: Record<string, string> = {
   UNKNOWN: 'Error desconocido',
   ABORTED: 'La solicitud fue cancelada por timeout',
   SESSION_EXPIRED: 'La sesión ha expirado',
+  AXIOS_ERROR: 'Error de conexión con AxiosError',
 };
 }
 
@@ -21,6 +22,13 @@ export class HttpNetworkError extends HttpError {
   constructor(message = HttpError.ERROR_MESSAGES.NETWORK) {
     super(message);
     this.name = 'HttpNetworkError';
+  }
+}
+
+export class HttpAxiosError extends HttpError {
+  constructor(message = HttpError.ERROR_MESSAGES.AXIOS_ERROR) {
+    super(message);
+    this.name = 'HttpAxiosError';
   }
 }
 
